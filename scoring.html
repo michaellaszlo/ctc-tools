@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Open+Sans::latin', 'Bitter::latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+    '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+  <title> CTC participation ranking simulation </title>
+  <link rel="stylesheet" href="tally.css" />
+  <script src="tally.data.js"></script>
+  <script src="scoring.js"></script>
+</head>
+<body>
+<div id="wrapper">
+
+<h1> CTC participation ranking proposal </h1>
+
+<h2> Ranking formula: logarithmic accumulation and slow decay </h2>
+
+<p> Each team carries a running total from month to month. This
+total is adjusted according to the number of boats the team has
+floated in the current month. </p>
+
+<p> Let <span class="math">x</span> be the number of boats floated
+by a team. Then: </p>
+
+<ul>
+  <li> &bull; If <span class="math">x</span> is greater than zero, the
+  team gains <span class="math">floor(100*log(x+1))</span> points. <i>[make an info box for the formula]</i>
+  </li>
+  <li>  &bull; If <span class="math">x</span> is zero, the
+  team loses 10% of its total from the previous month.
+  </li>
+</ul>
+
+<p> Teams are ranked according to their running total. <i>[put the following in an info box]</i> If several teams are tied for first place, the tie is broken as follows: </p>
+
+<ul>
+  <li> &bull; A team that has never chosen a challenge is preferred. </li>
+  <li> &bull; Failing that, a team that chose its last challenge longer ago is preferred. </p>
+  <li> &bull; If there is still a tie, the winner is chosen randomly. </li>
+</ul>
+
+<p> The team in first place wins the right to select the next
+challenge, and its running total is reset to zero. </p>
+
+<p id="layout"> Layout option: <span id="button"><span id="horizontal">horizontal</span><span id="vertical">vertical</span></span> list for each month </p>
+
+<div id="tallies"></div>
+
+</div><!--end wrapper-->
+</body>
+</html>

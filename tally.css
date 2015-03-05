@@ -1,0 +1,103 @@
+body, div, p, ul, li, table, tr, td, h1, h2, h3, h4 {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #fff;
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+}
+
+#wrapper {
+  background: #fff;
+  padding: 20px 40px;
+}
+
+ul {
+  list-style: none;
+}
+
+#layout {
+  margin-top: 20px;
+}
+#button {
+  cursor: pointer;
+}
+#button span {
+  border-top: 1px solid #335db2;
+  border-bottom: 1px solid #335db2;
+  padding: 2px 6px;
+}
+#button:hover span {
+  border-top: 1px solid #911d1d;
+  border-bottom: 1px solid #911d1d;
+}
+#button:hover #horizontal {
+  border-left: 1px solid #911d1d;
+}
+#button:hover #vertical {
+  border-right: 1px solid #911d1d;
+}
+#horizontal {
+  border-left: 1px solid #335db2;
+}
+#vertical {
+  border-right: 1px solid #335db2;
+}
+#button span.live {
+  background: #fff;
+  color: #888;
+}
+#button span.dead {
+  background: #ddd;
+  color: #000;
+}
+
+table {
+  margin-top: 20px;
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 2620px;
+}
+
+td {
+  padding-top: 1px;
+  padding-bottom: 1px;
+  height: 30px;
+  width: 120px;
+}
+td.date {
+  font-size: 13px;
+  width: 115px;
+  padding-left: 5px;
+}
+td.date.horizontal {
+  border-bottom: 3px solid #ddd;
+}
+td.tally.horizontal {
+  border-bottom: 3px solid #fff;
+}
+td.date.vertical {
+  border-right: 3px solid #ddd;
+}
+td.tally.vertical {
+  border-right: 3px solid #fff;
+}
+td.tally {
+  font-size: 12px;
+  padding-left: 5px;
+  color: #222;
+}
+td.tally span.boats {
+  color: #000;
+}
+
+td a {
+  text-decoration: none;
+  color: #335db2;
+}
+td a:hover {
+  background: #ffc;
+  color: #911d1d;
+}
+
