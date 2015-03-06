@@ -1,0 +1,5 @@
+
++ make both tables at once and swap them to switch orientation
++ calculate table width based on data
+- consider using getComputedWidth to synchronize JS with CSS
+

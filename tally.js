@@ -1,50 +1,31 @@
 var Tally = {
-  monthlyRecords: records,
-  teamColors: colors,
-  oppositeOrientation: { 'horizontal': 'vertical', 'vertical': 'horizontal' }
+  records: records,  // We assume that a previously imported
+  colors: colors,    //   script has defined records and colors.
+  cellWidth: 125,
+  transpose: { 'horizontal': 'vertical', 'vertical': 'horizontal' }
 };
-
-Tally.transposeTable = function () {
-  var g = Tally,
-      table = document.createElement('table'),
-      tbody = document.createElement('tbody'),
-      numCols = g.table.rows.length,
-      numRows = g.table.rows[0].cells.length;
-  console.log('numRows = '+numRows+', numCols = '+numCols);
-  for (var r = 0; r < numRows; ++r) {
-    var tr = document.createElement('tr');
-    for (var c = 0; c < numCols; ++c) {
-      var td = g.table.rows[c].cells[r].cloneNode(true);
-      tr.appendChild(td);
-    }
-    tbody.appendChild(tr);
-  }
-  table.appendChild(tbody);
-  g.container.removeChild(g.table);
-  g.container.appendChild(table);
-  g.table = table;
-}
 
 Tally.makeTable = function (orientation) {
   var g = Tally;
   if (g.table !== undefined) {
-    g.transposeTable();
-    g.table.className = orientation;
+    g.table[g.transpose[orientation]].style.display = 'none';
+    g.table[orientation].style.display = 'block';
     return;
   }
-  var records = g.monthlyRecords,
-      colors = g.teamColors,
+  var records = g.records,
+      colors = g.colors,
       spans = g.spans,
-      table = document.createElement('table'),
-      tbody = document.createElement('tbody');
-  g.table = table;
-  // Let's make a vertical table, then transpose it afterward if necessary.
-  maxTally = g.maxTally;
-  // Make maxTally+1 rows to accommodate the dates.
-  for (var r = 0; r <= maxTally; ++r) {
-    tbody.appendChild(document.createElement('tr'));
+      maxTally = g.maxTally,
+      tbody = {
+        vertical: document.createElement('tbody'),
+        horizontal: document.createElement('tbody')
+      };
+  for (var r = 0; r <= maxTally; ++r) {  // The extra row is for dates.
+    tbody.vertical.appendChild(document.createElement('tr'));
   }
+  // Fill the columns of the vertical table and the rows of the horizontal one.
   for (var c = 0; c < records.length; ++c) {
+    tbody.horizontal.appendChild(document.createElement('tr'));
     var record = records[c],
         tally = record.tally,
         td = document.createElement('td'),
@@ -54,32 +35,44 @@ Tally.makeTable = function (orientation) {
     a.target = '_blank';
     a.innerHTML = record.dateString;
     td.appendChild(a);
-    tbody.rows[0].appendChild(td);
+    tbody.vertical.rows[0].appendChild(td);
+    tbody.horizontal.rows[c].appendChild(td.cloneNode(true));
     for (var r = 0; r < maxTally; ++r) {
       td = document.createElement('td');
-      // If we have no data, the cell stays empty and goes in the row anyway.
-      if (r < tally.length) {
+      if (r < tally.length) {  // If we have no data, the cell stays empty.
         var team = tally[r].team,
             boats = tally[r].boats,
             color = '#'+colors[team];
-        td.className = 'tally';
         td.innerHTML = team+': <span class="boats">'+boats+'</span>';
         td.style.backgroundColor = color;
+        td.className = 'tally';
       }
-      tbody.rows[1+r].appendChild(td);
+      tbody.vertical.rows[1+r].appendChild(td);
+      tbody.horizontal.rows[c].appendChild(td.cloneNode(true));
     }
   }
-  table.appendChild(tbody);
-  g.container.appendChild(table);
-  if (orientation == 'horizontal') {
-    g.transposeTable();
+  g.table = {
+    vertical: document.createElement('table'),
+    horizontal: document.createElement('table')
+  };
+  g.table.vertical.style.width = records.length * g.cellWidth + 'px';
+  g.table.horizontal.style.width = (1 + maxTally) * g.cellWidth + 'px';
+  var names = ['vertical', 'horizontal'];
+  for (var i = 0; i < names.length; ++i) {
+    var name = names[i],
+        table = g.table[name];
+    table.className = name;
+    table.style.display = 'none';
+    g.container.appendChild(table);
+    table.appendChild(tbody[name]);
   }
-  g.table.className = orientation;
+  g.table[g.transpose[orientation]].style.display = 'none';
+  g.table[orientation].style.display = 'block';
 };
 
 Tally.prep = function () {
   var g = Tally,
-      records = g.monthlyRecords,
+      records = g.records,
       maxTally = 0;
   for (var i = 0; i < records.length; ++i) {
     var record = records[i],
@@ -96,7 +89,7 @@ Tally.prep = function () {
     vertical: document.getElementById('vertical'),
   };
   var initialOrientation = 'vertical',
-      otherOrientation = g.oppositeOrientation[initialOrientation];
+      otherOrientation = g.transpose[initialOrientation];
   g.container = document.getElementById('tallies'),
   g.makeTable(initialOrientation);
   // Set the initial state of the buttons.
@@ -116,4 +109,3 @@ Tally.prep = function () {
 };
 
 window.onload = Tally.prep;
-
