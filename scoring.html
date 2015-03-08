@@ -4,7 +4,7 @@
 <head>
 <script type="text/javascript">
   WebFontConfig = {
-    google: { families: [ 'Open+Sans::latin', 'Bitter::latin' ] }
+    google: { families: [ 'Open+Sans:400:latin' ] }
   };
   (function() {
     var wf = document.createElement('script');
@@ -26,11 +26,11 @@
 
 <h1> CTC participation leaderboard </h1>
 
-<h2> Ranking formula: logarithmic accumulation and slow decay </h2>
+<h2> Ranking formula </h2>
 
-<p> Each team carries a running total from month to month. This
-total is adjusted according to the number of boats the team has
-floated in the current month. </p>
+<p> Each team carries a total number of points from month to month.
+This running total is adjusted according to the number of boats the
+team has floated in the current month. </p>
 
 <p> Let <span class="math">x</span> be the number of boats floated
 by a team. Then: </p>
@@ -40,7 +40,7 @@ by a team. Then: </p>
   team gains <span class="math">floor(100*log(x+1))</span> points. <i>[make an info box for the formula]</i>
   </li>
   <li>  &bull; If <span class="math">x</span> is zero, the
-  team loses 10% of its total from the previous month.
+  team loses 20% of its running total.
   </li>
 </ul>
 
@@ -48,7 +48,7 @@ by a team. Then: </p>
 
 <ul>
   <li> &bull; A team that has never chosen a challenge is preferred. </li>
-  <li> &bull; Failing that, a team that chose its last challenge longer ago is preferred. </p>
+  <li> &bull; Otherwise, a team that chose its last challenge longer ago is preferred. </p>
   <li> &bull; If there is still a tie, the winner is chosen randomly. </li>
 </ul>
 

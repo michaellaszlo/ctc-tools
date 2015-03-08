@@ -1,7 +1,7 @@
 var Tally = {
   records: records,  // We assume that a previously imported
   colors: colors,    //   script has defined records and colors.
-  cellWidth: 125,
+  cellWidth: 160,
   transpose: { 'horizontal': 'vertical', 'vertical': 'horizontal' }
 };
 
@@ -42,7 +42,7 @@ Tally.makeTable = function (orientation) {
         var team = tally[r].team,
             boats = tally[r].boats,
             color = '#'+colors[team];
-        td.innerHTML = team+': <span class="boats">'+boats+'</span>';
+        td.innerHTML = team+' <span class="boats">'+boats+'</span>';
         td.style.backgroundColor = color;
         td.className = 'tally';
       }

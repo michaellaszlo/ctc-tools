@@ -55,7 +55,7 @@ ul {
 
 table {
   margin-top: 20px;
-  padding-right: 37px;
+  padding-right: 20px;
   border-collapse: collapse;
   table-layout: fixed;
 }
@@ -63,29 +63,29 @@ table {
 td {
   padding-top: 1px;
   padding-bottom: 1px;
-  height: 30px;
-  width: 120px;
+  height: 35px;
+  width: 130px;
+  padding-left: 10px;
+}
+table.horizontal td {
+  border-bottom: 10px solid #fff;
+}
+table.vertical td {
+  border-right: 20px solid #fff;
+}
+td {
+  position: relative;
+}
+td .boats {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
 }
 td.date {
   font-size: 13px;
-  width: 115px;
-  padding-left: 5px;
-}
-table.horizontal td.date {
-  border-bottom: 3px solid #ddd;
-}
-table.horizontal td.tally {
-  border-bottom: 3px solid #fff;
-}
-table.vertical td.date {
-  border-right: 3px solid #ddd;
-}
-table.vertical td.tally {
-  border-right: 3px solid #fff;
 }
 td.tally {
   font-size: 12px;
-  padding-left: 5px;
   color: #222;
 }
 td.tally span.boats {
