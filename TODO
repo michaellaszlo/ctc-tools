@@ -1,5 +1,17 @@
 
 + make both tables at once and swap them to switch orientation
 + calculate table width based on data
-- consider using getComputedWidth to synchronize JS with CSS
+
+- copy tally.js to scoring.js
+- compute monthly participation rankings
+- display the participation rankings
+- make a summary chart of winners
+- experiment with other ranking formulae
+
+maybe?
+  - use getComputedStyle to synchronize JS with CSS
+  - display rank numbers
+  - do something about text on dark backgrounds
+  - illuminate column (and show rank number?) on hover
+  - add controls to enlarge chart
 

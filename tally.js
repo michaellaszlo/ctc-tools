@@ -14,7 +14,6 @@ Tally.makeTable = function (orientation) {
   }
   var records = g.records,
       colors = g.colors,
-      spans = g.spans,
       maxTally = g.maxTally,
       tbody = {
         vertical: document.createElement('tbody'),
@@ -82,29 +81,28 @@ Tally.prep = function () {
     }
   }
   g.maxTally = maxTally;
-  // The button switches the table orientation. Set it up for easy access.
+  // The button switches the table orientation.
   var button = document.getElementById('button');
-  g.spans = {
+  g.label = {  // These are labels inside the button.
     horizontal: document.getElementById('horizontal'),
     vertical: document.getElementById('vertical'),
   };
-  var initialOrientation = 'vertical',
-      otherOrientation = g.transpose[initialOrientation];
+  var initialOrientation = 'vertical';
   g.container = document.getElementById('tallies'),
   g.makeTable(initialOrientation);
   // Set the initial state of the buttons.
-  g.spans.live = g.spans[initialOrientation];
-  g.spans.dead = g.spans[otherOrientation];
-  g.spans.live.className = 'live';
-  g.spans.dead.className = 'dead';
+  g.label.live = g.label[initialOrientation];
+  g.label.dead = g.label[g.transpose[initialOrientation]];
+  g.label.live.className = 'live';
+  g.label.dead.className = 'dead';
   // Define an orientation switcher.
   button.onclick = function () {
-    var t = g.spans.live;
-    g.spans.live = g.spans.dead;
-    g.spans.dead = t;
-    g.spans.live.className = 'live';
-    g.spans.dead.className = 'dead';
-    g.makeTable(g.spans.live.id);
+    var t = g.label.live;
+    g.label.live = g.label.dead;
+    g.label.dead = t;
+    g.label.live.className = 'live';
+    g.label.dead.className = 'dead';
+    g.makeTable(g.label.live.id);
   };
 };
 

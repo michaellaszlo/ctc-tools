@@ -1,2 +1,2 @@
 # ctc-tools
-Tools for extracting, analyzing, and displaying data from c2ctc.com
+Tools for extracting and analyzing data from c2ctc.com
