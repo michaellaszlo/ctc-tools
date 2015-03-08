@@ -3,18 +3,18 @@
 + calculate table width based on data
 + copy tally.js to scoring.js
 + compute monthly participation rankings
++ display the participation rankings
 
-- display the participation rankings
-- make a summary chart of winners
-- experiment with other ranking formulae
-
+- make a deterministic PRNG so that tie-breaking is consistent
 - change the button to a vertical slider (no frame, no highlighting)
 - check layout in all major browser/OS combinations
 
 maybe?
+  - make a summary chart of winners
+  - illuminate column on hover
   - use getComputedStyle to synchronize JS with CSS
+  - display rank numbers
+  - experiment with other ranking formulae
   - do something about text on dark backgrounds
-  - illuminate column (and show rank number?) on hover
-  - display rank numbers all the time?
   - add controls to enlarge chart
 

@@ -1,7 +1,8 @@
 var Tally = {
-  records: records,  // We assume that a previously imported
-  colors: colors,    //   script has defined records and colors.
-  cellWidth: 160,
+  ids: ids,          // We assume that a previously imported script
+  records: records,  // has defined ids, records, and colors.
+  colors: colors,
+  cellWidth: 160, columnGap: 20,
   transpose: { 'horizontal': 'vertical', 'vertical': 'horizontal' }
 };
 
@@ -12,20 +13,27 @@ Tally.makeTable = function (orientation) {
     g.table[orientation].style.display = 'block';
     return;
   }
-  var records = g.records,
-      colors = g.colors,
-      maxTally = g.maxTally,
+  var ids = g.ids,
+      records = g.records,
+      maxLength = 0;
+  for (var i = 0; i < ids.length; ++i) {
+    var length = records[ids[i]].tally.length;
+    if (length > maxLength) {
+      maxLength = length;
+    }
+  }
+  var colors = g.colors,
       tbody = {
         vertical: document.createElement('tbody'),
         horizontal: document.createElement('tbody')
       };
-  for (var r = 0; r <= maxTally; ++r) {  // The extra row is for dates.
+  for (var r = 0; r <= maxLength; ++r) {  // The extra row is for dates.
     tbody.vertical.appendChild(document.createElement('tr'));
   }
   // Fill the columns of the vertical table and the rows of the horizontal one.
-  for (var c = 0; c < records.length; ++c) {
+  for (var c = 0; c < ids.length; ++c) {
     tbody.horizontal.appendChild(document.createElement('tr'));
-    var record = records[c],
+    var record = records[ids[ids.length-1-c]],
         tally = record.tally,
         td = document.createElement('td'),
         a = document.createElement('a');
@@ -36,7 +44,7 @@ Tally.makeTable = function (orientation) {
     td.appendChild(a);
     tbody.vertical.rows[0].appendChild(td);
     tbody.horizontal.rows[c].appendChild(td.cloneNode(true));
-    for (var r = 0; r < maxTally; ++r) {
+    for (var r = 0; r < maxLength; ++r) {
       td = document.createElement('td');
       if (r < tally.length) {  // If we have no data, the cell stays empty.
         var team = tally[r].team,
@@ -54,8 +62,10 @@ Tally.makeTable = function (orientation) {
     vertical: document.createElement('table'),
     horizontal: document.createElement('table')
   };
-  g.table.vertical.style.width = records.length * g.cellWidth + 'px';
-  g.table.horizontal.style.width = (1 + maxTally) * g.cellWidth + 'px';
+  g.table.vertical.style.width =
+      ids.length * (g.cellWidth + g.columnGap) + 'px';
+  g.table.horizontal.style.width =
+      (1 + maxLength) * g.cellWidth + 'px';
   var names = ['vertical', 'horizontal'];
   for (var i = 0; i < names.length; ++i) {
     var name = names[i],
@@ -70,17 +80,7 @@ Tally.makeTable = function (orientation) {
 };
 
 Tally.prep = function () {
-  var g = Tally,
-      records = g.records,
-      maxTally = 0;
-  for (var i = 0; i < records.length; ++i) {
-    var record = records[i],
-        tally = record.tally;
-    if (tally.length > maxTally) {
-      maxTally = tally.length;
-    }
-  }
-  g.maxTally = maxTally;
+  var g = Tally;
   // The button switches the table orientation.
   var button = document.getElementById('button');
   g.label = {  // These are labels inside the button.

@@ -1,34 +1,26 @@
 var Scoring = {
-  records: records,  // We assume that a previously imported
-  colors: colors,    //   script has defined records and colors.
-  cellWidth: 160,
+  ids: ids,          // We assume that a previously imported script
+  records: records,  // has defined ids, records, and colors.
+  colors: colors,
+  cellWidth: 160, columnGap: 20, winnerGapHorizontal: 16,
   transpose: { 'horizontal': 'vertical', 'vertical': 'horizontal' }
 };
 
 Scoring.makeRankings = function () {
   var g = Scoring,
+      ids = g.ids,
       records = g.records,
-      boards = g.boards = [],
       teams = [],
-      teamInfo = {},
-      ids = [],
-      tallies = {};
-  for (var ri = 0; ri < records.length; ++ri) {
-    var id = records[ri].id;
-    ids.push(id);
-    tallies[id] = records[ri].tally;
-  }
-  // Sort by id because the earlier the month, the smaller the id.
-  // We will also make use of this fact in tie-breaking.
-  ids.sort(function (a, b) { return a-b; });
+      teamInfo = {};
+  var previousBoard;
   for (var ii = 0; ii < ids.length; ++ii) {
     var id = ids[ii],
-        tally = tallies[ids[ii]],
+        tally = records[ids[ii]].tally,
         nonzero = {},
         board = [];
-    // The previous month's runner starts anew from zero points.
-    if (ii != 0) {
-      var info = teamInfo[boards[ii-1][0].team];
+    // The previous month's winner starts anew from zero points.
+    if (previousBoard !== undefined) {
+      var info = teamInfo[previousBoard[0].team];
       info.lastChallenge = ids[ii-1];
       info.points = 0;
     }
@@ -83,37 +75,43 @@ Scoring.makeRankings = function () {
         return 1;
       }
       if (aLast !== undefined && bLast !== undefined && aLast != bLast) {
-        return aLast - bLast;
+        return aLast - bLast;  // Earlier months have smaller IDs.
       }
       return a.random - b.random;
     });
-    boards.push(board);
-    console.log('*** sorted: '+JSON.stringify(board));
+    records[id].board = board;
+    previousBoard = board;
   }
 };
 
 Scoring.makeTable = function (orientation) {
-  var g = Scoring;
+  var g = Scoring,
+      records = g.records;
   if (g.table !== undefined) {
     g.table[g.transpose[orientation]].style.display = 'none';
     g.table[orientation].style.display = 'block';
     return;
   }
-  var records = g.records,
-      colors = g.colors,
-      maxTally = g.maxTally,
+  var maxLength = 0;
+  for (var ii = 0; ii < ids.length; ++ii) {
+    var length = records[ids[ii]].board.length;
+    if (length > maxLength) {
+      maxLength = length;
+    }
+  }
+  var colors = g.colors,
       tbody = {
         vertical: document.createElement('tbody'),
         horizontal: document.createElement('tbody')
       };
-  for (var r = 0; r <= maxTally; ++r) {  // The extra row is for dates.
+  for (var r = 0; r <= maxLength; ++r) {  // The extra row is for dates.
     tbody.vertical.appendChild(document.createElement('tr'));
   }
   // Fill the columns of the vertical table and the rows of the horizontal one.
-  for (var c = 0; c < records.length; ++c) {
+  for (var c = 0; c < ids.length; ++c) {
     tbody.horizontal.appendChild(document.createElement('tr'));
-    var record = records[c],
-        tally = record.tally,
+    var record = records[ids[ids.length-1-c]],
+        board = record.board,
         td = document.createElement('td'),
         a = document.createElement('a');
     td.className = 'date';
@@ -123,15 +121,26 @@ Scoring.makeTable = function (orientation) {
     td.appendChild(a);
     tbody.vertical.rows[0].appendChild(td);
     tbody.horizontal.rows[c].appendChild(td.cloneNode(true));
-    for (var r = 0; r < maxTally; ++r) {
+    for (var r = 0; r < maxLength; ++r) {
       td = document.createElement('td');
-      if (r < tally.length) {  // If we have no data, the cell stays empty.
-        var team = tally[r].team,
-            boats = tally[r].boats,
+      if (r < board.length) {  // If we have no data, the cell stays empty.
+        var info = board[r],
+            team = info.team,
+            boats = info.boats,
+            delta = info.delta,
+            points = info.points,
             color = '#'+colors[team];
-        td.innerHTML = team+' <span class="boats">'+boats+'</span>';
-        td.style.backgroundColor = color;
-        td.className = 'tally';
+        td.innerHTML = [
+            '<span class="team">'+team+'</span>',
+            '<span class="boats">'+
+                '<b>'+boats+'</b> boat'+(boats == 1 ? '' : 's')+'</span>',
+            '<span class="score">'+(delta < 0 ? '&minus;' : '+')+
+                Math.abs(delta)+' &rarr; <b>'+points+'</b></span>'
+          ].join('<br />');
+        if (r == 0) {
+          td.className = 'winner';
+        }
+        td.style.background = color;
       }
       tbody.vertical.rows[1+r].appendChild(td);
       tbody.horizontal.rows[c].appendChild(td.cloneNode(true));
@@ -141,13 +150,17 @@ Scoring.makeTable = function (orientation) {
     vertical: document.createElement('table'),
     horizontal: document.createElement('table')
   };
-  g.table.vertical.style.width = records.length * g.cellWidth + 'px';
-  g.table.horizontal.style.width = (1 + maxTally) * g.cellWidth + 'px';
+  g.table.vertical.style.width =
+      ids.length * (g.cellWidth + g.columnGap) + 'px';
+  console.log('vertical: '+g.table.vertical.style.width);
+  g.table.horizontal.style.width =
+      (1 + maxLength) * g.cellWidth + g.winnerGapHorizontal + 'px';
+  console.log('horizontal: '+g.table.horizontal.style.width);
   var names = ['vertical', 'horizontal'];
   for (var i = 0; i < names.length; ++i) {
     var name = names[i],
         table = g.table[name];
-    table.className = name;
+    table.className = 'board '+name;
     table.style.display = 'none';
     g.container.appendChild(table);
     table.appendChild(tbody[name]);
@@ -159,16 +172,6 @@ Scoring.makeTable = function (orientation) {
 Scoring.prep = function () {
   var g = Scoring;
   g.makeRankings();
-  var records = g.records,
-      maxTally = 0;
-  for (var i = 0; i < records.length; ++i) {
-    var record = records[i],
-        tally = record.tally;
-    if (tally.length > maxTally) {
-      maxTally = tally.length;
-    }
-  }
-  g.maxTally = maxTally;
   // The button switches the table orientation.
   var button = document.getElementById('button');
   g.label = {  // These are labels inside the button.

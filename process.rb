@@ -31,6 +31,8 @@ Dir.entries(dir).sort.each do |file_name|
   end
   team_count = Hash.new(0)
   scan_tuples.each do |color, team, number|
+    team = 'Rowing Club Mantova' if team == 'ROWING CLUB MANTOVA'
+    color = '383ec8' if team == 'Fitness Matters'
     team_colors[team] = color.downcase
     team_count[team] += 1
   end
@@ -43,14 +45,15 @@ end
 
 #puts 'max_number = %d' % max_number
 
-tallies.sort!.reverse!
-puts 'var records = ['
+tallies.sort!
+puts 'var ids = ['+(tallies.map {|tally| tally[0] }.join ', ')+'];'
+puts 'var records = {'
 parts = []
 tallies.each do |id, date_string, counts|
-  parts.push("  { id: %d, dateString: '%s', tally: [" % [id, date_string] + counts.map {|t, c| "{ team: '%s', boats: %d }" % [t, c] }.join(', ') + '] }')
+  parts.push("  %d: { dateString: '%s', tally: [" % [id, date_string] + counts.map {|t, c| "{ team: '%s', boats: %d }" % [t, c] }.join(', ') + '] }')
 end
 puts parts.join(",\n")
-puts '];'
+puts '};'
 
 puts 'var colors = {'
 puts team_colors.sort.map {|team, color| "  '%s': '%s'" % [team, color] }.join ",\n"
