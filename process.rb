@@ -8,6 +8,14 @@ mcnally_re = Regexp.new('bold; \'>[^>]*(Carole|McNally)')
 mcnally_ids = [28, 41, 54, 67, 92, 105, 118]
 team_re = Regexp.new('background: #(\w+); font-weight: bold; font-size: 12pt; white-space: nowrap" >([^<]+) (\w+) <')
 
+color_shift = {
+  'Fitness Matters' => '383ec8',
+  'Forum Flyers' => 'ab44d0',
+  'Independent' => 'f253f2',
+  'Paddy Power' => '2bdf2b',
+  'Empty the Tanks' => 'ec321a'
+}
+
 max_number = 0
 tallies = []
 team_colors = {}
@@ -32,7 +40,7 @@ Dir.entries(dir).sort.each do |file_name|
   team_count = Hash.new(0)
   scan_tuples.each do |color, team, number|
     team = 'Rowing Club Mantova' if team == 'ROWING CLUB MANTOVA'
-    color = '383ec8' if team == 'Fitness Matters'
+    color = color_shift[team] if color_shift.include? team
     team_colors[team] = color.downcase
     team_count[team] += 1
   end

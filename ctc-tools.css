@@ -12,6 +12,16 @@ b {
   font-weight: 600;
 }
 
+.math {
+  font-family: Inconsolata, Courier, monospace;
+  font-weight: 700;
+}
+.question {
+  color: #666;
+  background: #efebce;
+  padding: 0 3px;
+}
+
 #wrapper {
   background: #fff;
   padding: 20px 40px;

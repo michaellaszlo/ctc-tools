@@ -4,7 +4,8 @@
 <head>
 <script type="text/javascript">
   WebFontConfig = {
-    google: { families: [ 'Open+Sans:400,600,700:latin' ] }
+    google: { families: [ 'Open+Sans:400,600,700:latin',
+        'Inconsolata:700:latin'] }
   };
   (function() {
     var wf = document.createElement('script');
@@ -16,7 +17,7 @@
     s.parentNode.insertBefore(wf, s);
   })();
 </script>
-  <title> CTC participation leaderboard </title>
+  <title> CTC participation leaderboard simulation </title>
   <link rel="stylesheet" href="ctc-tools.css" />
   <script src="data.js"></script>
   <script src="scoring.js"></script>
@@ -24,9 +25,9 @@
 <body>
 <div id="wrapper">
 
-<h1> CTC participation leaderboard </h1>
+<h1> CTC participation leaderboard simulation </h1>
 
-<h2> Ranking formula </h2>
+<h2> Proposed ranking formula </h2>
 
 <p> Each team carries a total number of points from month to month.
 This total is adjusted according to the number of boats the team
@@ -37,16 +38,21 @@ by a team. Then: </p>
 
 <ul>
   <li> &bull; If <span class="math">x</span> is greater than zero, the
-  team gains <span class="math">floor(100*log(x+1))</span> points. <i>[make an info box for the formula]</i>
+  team gains <span class="math">floor(100&middot;log(x+1))</span> points. <span class="question">&oplus; What does this formula mean?</span>
   </li>
   <li>  &bull; If <span class="math">x</span> is zero, the
   team loses 20% of its total.
   </li>
 </ul>
 
-<p> Teams are ranked according to their total. <i>[put the following
-in an info box]</i> If several teams are tied for first place, the
-tie is broken as follows: </p>
+<p> Teams are ranked according to their total. <span class="question">&oplus; How
+are ties broken?</span> </p>
+
+<p> <i>info box:</i> Due to the precision of the scoring formula,
+ties for first place occur rarely. There are no first-place ties
+when the formula is applied to the past three years of CTC results.
+Ties at lower ranks have no effect on deciding the winner. All ties
+are broken according to the following rules: </p>
 
 <ul>
   <li> &bull; A team that has never chosen a challenge is preferred. </li>
