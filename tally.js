@@ -1,7 +1,7 @@
 var Tally = {
-  ids: ids,          // We assume that a previously imported script
-  records: records,  // has defined ids, records, and colors.
-  colors: colors,
+  monthIds: monthIds,    // We assume that a previously imported
+  monthInfo: monthInfo,  // script has defined monthIds, monthInfo,
+  teamInfo: teamInfo,    // and teamInfo.
   cellWidth: 160, columnGap: 20,
   transpose: { 'horizontal': 'vertical', 'vertical': 'horizontal' }
 };
@@ -13,16 +13,16 @@ Tally.makeTable = function (orientation) {
     g.table[orientation].style.display = 'block';
     return;
   }
-  var ids = g.ids,
-      records = g.records,
+  var monthIds = g.monthIds,
+      monthInfo = g.monthInfo,
       maxLength = 0;
-  for (var i = 0; i < ids.length; ++i) {
-    var length = records[ids[i]].tally.length;
+  for (var i = 0; i < monthIds.length; ++i) {
+    var length = monthInfo[monthIds[i]].tally.length;
     if (length > maxLength) {
       maxLength = length;
     }
   }
-  var colors = g.colors,
+  var teamInfo = g.teamInfo,
       tbody = {
         vertical: document.createElement('tbody'),
         horizontal: document.createElement('tbody')
@@ -31,9 +31,9 @@ Tally.makeTable = function (orientation) {
     tbody.vertical.appendChild(document.createElement('tr'));
   }
   // Fill the columns of the vertical table and the rows of the horizontal one.
-  for (var c = 0; c < ids.length; ++c) {
+  for (var c = 0; c < monthIds.length; ++c) {
     tbody.horizontal.appendChild(document.createElement('tr'));
-    var record = records[ids[ids.length-1-c]],
+    var record = monthInfo[monthIds[monthIds.length-1-c]],
         tally = record.tally,
         td = document.createElement('td'),
         a = document.createElement('a');
@@ -49,7 +49,7 @@ Tally.makeTable = function (orientation) {
       if (r < tally.length) {  // If we have no data, the cell stays empty.
         var team = tally[r].team,
             boats = tally[r].boats,
-            color = '#'+colors[team];
+            color = '#'+teamInfo[team].color;
         td.innerHTML = team+' <span class="boats">'+boats+'</span>';
         td.style.backgroundColor = color;
         td.className = 'tally';
@@ -63,7 +63,7 @@ Tally.makeTable = function (orientation) {
     horizontal: document.createElement('table')
   };
   g.table.vertical.style.width =
-      ids.length * (g.cellWidth + g.columnGap) + 'px';
+      monthIds.length * (g.cellWidth + g.columnGap) + 'px';
   g.table.horizontal.style.width =
       (1 + maxLength) * g.cellWidth + 'px';
   var names = ['vertical', 'horizontal'];

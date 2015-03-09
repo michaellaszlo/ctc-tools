@@ -8,7 +8,10 @@ mcnally_re = Regexp.new('bold; \'>[^>]*(Carole|McNally)')
 mcnally_ids = [28, 41, 54, 67, 92, 105, 118]
 team_re = Regexp.new('background: #(\w+); font-weight: bold; font-size: 12pt; white-space: nowrap" >([^<]+) (\w+) <')
 
-color_shift = {
+name_adjust = {
+  'ROWING CLUB MANTOVA' => 'Rowing Club Mantova'
+}
+color_adjust = {
   'Fitness Matters' => '383ec8',
   'Forum Flyers' => 'ab44d0',
   'Independent' => 'f253f2',
@@ -16,16 +19,16 @@ color_shift = {
   'Empty the Tanks' => 'ec321a'
 }
 
-max_number = 0
 tallies = []
-team_colors = {}
+id_to_team = [nil]
+team_to_info = {}
 
 dir = 'scrape'
 Dir.entries(dir).sort.each do |file_name|
   file_name =~ file_name_re
   next if $~ == nil
-  id = $1.to_i
-  next if mcnally_ids.index(id) != nil
+  month_id = $1.to_i
+  next if mcnally_ids.index(month_id) != nil
   text = open(dir+'/'+file_name).read
   text.encode!('UTF-16', 'UTF-8', :invalid => :replace, :replace => '')
   text.encode!('UTF-8', 'UTF-16')
@@ -37,32 +40,40 @@ Dir.entries(dir).sort.each do |file_name|
     puts 'no match'
     break
   end
-  team_count = Hash.new(0)
+  boat_count = Hash.new(0)
   scan_tuples.each do |color, team, number|
-    team = 'Rowing Club Mantova' if team == 'ROWING CLUB MANTOVA'
-    color = color_shift[team] if color_shift.include? team
-    team_colors[team] = color.downcase
-    team_count[team] += 1
+    team = name_adjust[team] if name_adjust.include? team
+    if not team_to_info.include? team
+      color = color_adjust[team] if color_adjust.include? team
+      color = color.downcase
+      team_id = id_to_team.length
+      id_to_team.push(team)
+      team_to_info[team] = { 'id' => team_id, 'color' => color }
+    end
+    boat_count[team] += 1
   end
-  counts = team_count.to_a.sort_by {|team, count| [-count, team] }
+  counts = boat_count.to_a.sort_by {|team, count| [-count, team] }
   number = counts.length
-  max_number = number if number > max_number
-  tally = [id, date_string, counts]
+  tally = [month_id, date_string, counts]
   tallies.push(tally)
 end
 
-#puts 'max_number = %d' % max_number
-
 tallies.sort!
-puts 'var ids = ['+(tallies.map {|tally| tally[0] }.join ', ')+'];'
-puts 'var records = {'
+puts 'var monthIds = ['+(tallies.map {|tally| tally[0] }.join ', ')+'];'
+puts 'var monthInfo = {'
 parts = []
-tallies.each do |id, date_string, counts|
-  parts.push("  %d: { dateString: '%s', tally: [" % [id, date_string] + counts.map {|t, c| "{ team: '%s', boats: %d }" % [t, c] }.join(', ') + '] }')
+tallies.each do |month_id, date_string, counts|
+  parts.push("  %d: { dateString: '%s', tally: [" % [month_id, date_string] + counts.map {|t, c| "{ team: '%s', boats: %d }" % [t, c] }.join(', ') + '] }')
 end
 puts parts.join(",\n")
 puts '};'
 
-puts 'var colors = {'
-puts team_colors.sort.map {|team, color| "  '%s': '%s'" % [team, color] }.join ",\n"
+parts = []
+id_to_team[1..-1].each do |team|
+  info = team_to_info[team]
+  id, color = info['id'], info['color']
+  parts.push "  '%s': { id: %d, color: '%s' }" % [team, id, color]
+end
+puts 'var teamInfo = {'
+puts parts.join ",\n"
 puts '};'

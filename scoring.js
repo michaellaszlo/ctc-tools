@@ -1,27 +1,27 @@
 var Scoring = {
-  ids: ids,          // We assume that a previously imported script
-  records: records,  // has defined ids, records, and colors.
-  colors: colors,
+  monthIds: monthIds,    // We assume that a previously imported
+  monthInfo: monthInfo,  // script has defined monthIds, monthInfo,
+  teamInfo: teamInfo,    // and teamInfo.
   cellWidth: 160, columnGap: 20, winnerGapHorizontal: 16,
   transpose: { 'horizontal': 'vertical', 'vertical': 'horizontal' }
 };
 
 Scoring.makeRankings = function () {
   var g = Scoring,
-      ids = g.ids,
-      records = g.records,
+      monthIds = g.monthIds,
+      monthInfo = g.monthInfo,
       teams = [],
       teamInfo = {};
   var previousBoard;
-  for (var ii = 0; ii < ids.length; ++ii) {
-    var id = ids[ii],
-        tally = records[ids[ii]].tally,
+  for (var ii = 0; ii < monthIds.length; ++ii) {
+    var id = monthIds[ii],
+        tally = monthInfo[monthIds[ii]].tally,
         nonzero = {},
         board = [];
     // The previous month's winner starts anew from zero points.
     if (previousBoard !== undefined) {
       var info = teamInfo[previousBoard[0].team];
-      info.lastChallenge = ids[ii-1];
+      info.lastChallenge = monthIds[ii-1];
       info.points = 0;
     }
     // Consider teams that have floated a boat.
@@ -102,27 +102,27 @@ Scoring.makeRankings = function () {
       }
       return a.random - b.random;
     });
-    records[id].board = board;
+    monthInfo[id].board = board;
     previousBoard = board;
   }
 };
 
 Scoring.makeTable = function (orientation) {
   var g = Scoring,
-      records = g.records;
+      monthInfo = g.monthInfo;
   if (g.table !== undefined) {
     g.table[g.transpose[orientation]].style.display = 'none';
     g.table[orientation].style.display = 'block';
     return;
   }
   var maxLength = 0;
-  for (var ii = 0; ii < ids.length; ++ii) {
-    var length = records[ids[ii]].board.length;
+  for (var ii = 0; ii < monthIds.length; ++ii) {
+    var length = monthInfo[monthIds[ii]].board.length;
     if (length > maxLength) {
       maxLength = length;
     }
   }
-  var colors = g.colors,
+  var teamInfo = g.teamInfo,
       tbody = {
         vertical: document.createElement('tbody'),
         horizontal: document.createElement('tbody')
@@ -131,9 +131,9 @@ Scoring.makeTable = function (orientation) {
     tbody.vertical.appendChild(document.createElement('tr'));
   }
   // Fill the columns of the vertical table and the rows of the horizontal one.
-  for (var c = 0; c < ids.length; ++c) {
+  for (var c = 0; c < monthIds.length; ++c) {
     tbody.horizontal.appendChild(document.createElement('tr'));
-    var record = records[ids[ids.length-1-c]],
+    var record = monthInfo[monthIds[monthIds.length-1-c]],
         board = record.board,
         td = document.createElement('td'),
         a = document.createElement('a');
@@ -152,7 +152,7 @@ Scoring.makeTable = function (orientation) {
             boats = info.boats,
             delta = info.delta,
             points = info.points,
-            color = '#'+colors[team];
+            color = '#'+teamInfo[team].color;
         td.innerHTML = [
             '<span class="team">'+team+'</span>',
             '<span class="boats">'+
@@ -174,7 +174,7 @@ Scoring.makeTable = function (orientation) {
     horizontal: document.createElement('table')
   };
   g.table.vertical.style.width =
-      ids.length * (g.cellWidth + g.columnGap) + 'px';
+      monthIds.length * (g.cellWidth + g.columnGap) + 'px';
   g.table.horizontal.style.width =
       (1 + maxLength) * g.cellWidth + g.winnerGapHorizontal + 'px';
   var names = ['vertical', 'horizontal'];
