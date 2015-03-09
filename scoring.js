@@ -56,8 +56,31 @@ Scoring.makeRankings = function () {
       }
     }
     // Assign random ranks for tie-breaking purposes.
+    // In order to make the results deterministic, we are using a
+    // linear congruential generator seeded with the ID of the
+    // month for which the leaderboard is calculated. All future
+    // implementations must use the same method if the leaderboards
+    // are to be kept in the same state.
+    // The values of m, a, c are the ones from Numerical Recipes,
+    // as reproduced in Wikipedia:
+    //   http://en.wikipedia.org/wiki/Linear_congruential_generator
+    // Also note carefully the choice of seed: 42*id % m
+    // Also note the exact usage of nextRandomNumber() in the loop below.
+    // Also note that our determinism depends on the ordering of elements
+    // in board, which depends on the ordering of tally. Thanks to
+    // process.rb, tally is ordered by boats (descending) and lexical
+    // order of team name (ascending). This order must be formalized or
+    // replaced with something simpler.
+    var m = Math.pow(2, 32),
+        a = 1664525,
+        c = 1013904223,
+        seed = 42*id % m;
+    function nextRandomNumber() {
+      seed = (a*seed + c) % m;
+      return seed;
+    }
     for (var bi = board.length-1; bi >= 0; --bi) {
-      var p = Math.floor((bi+1)*Math.random()),
+      var p = nextRandomNumber() % (bi+1),
           t = board[p];
       board[p] = board[bi],
       board[bi] = t;
@@ -152,10 +175,8 @@ Scoring.makeTable = function (orientation) {
   };
   g.table.vertical.style.width =
       ids.length * (g.cellWidth + g.columnGap) + 'px';
-  console.log('vertical: '+g.table.vertical.style.width);
   g.table.horizontal.style.width =
       (1 + maxLength) * g.cellWidth + g.winnerGapHorizontal + 'px';
-  console.log('horizontal: '+g.table.horizontal.style.width);
   var names = ['vertical', 'horizontal'];
   for (var i = 0; i < names.length; ++i) {
     var name = names[i],
