@@ -10,8 +10,8 @@ Scoring.makeRankings = function () {
   var g = Scoring,
       monthIds = g.monthIds,
       monthInfo = g.monthInfo,
-      teams = [],
-      teamInfo = {};
+      teamInfo = g.teamInfo,
+      teams = [];
   var previousBoard;
   for (var ii = 0; ii < monthIds.length; ++ii) {
     var id = monthIds[ii],
@@ -29,9 +29,9 @@ Scoring.makeRankings = function () {
       var team = tally[ti].team,
           boats = tally[ti].boats,
           info = teamInfo[team];
-      if (info === undefined) {
+      if (info.points === undefined) {
         teams.push(team);
-        info = teamInfo[team] = { points: 0 };
+        info.points = 0;
       }
       var delta = Math.floor(100*Math.log(boats+1));
       info.points += delta;
@@ -59,26 +59,29 @@ Scoring.makeRankings = function () {
     // In order to make the results deterministic, we are using a
     // linear congruential generator seeded with the ID of the
     // month for which the leaderboard is calculated. All future
-    // implementations must use the same method if the leaderboards
-    // are to be kept in the same state.
-    // The values of m, a, c are the ones from Numerical Recipes,
-    // as reproduced in Wikipedia:
+    // implementations must use the same method if the leaderboard
+    // archive is to be kept in the same state.
+    // The values of m, a, c are the ones given in Numerical Recipes
+    // and reproduced in the Wikipedia article on LCGs:
     //   http://en.wikipedia.org/wiki/Linear_congruential_generator
-    // Also note carefully the choice of seed: 42*id % m
+    // Also note carefully the choice of seed: 42*id*id % m
     // Also note the exact usage of nextRandomNumber() in the loop below.
-    // Also note that our determinism depends on the ordering of elements
-    // in board, which depends on the ordering of tally. Thanks to
-    // process.rb, tally is ordered by boats (descending) and lexical
-    // order of team name (ascending). This order must be formalized or
-    // replaced with something simpler.
     var m = Math.pow(2, 32),
         a = 1664525,
         c = 1013904223,
-        seed = 42*id % m;
+        seed = 42*id*id % m;
     function nextRandomNumber() {
       seed = (a*seed + c) % m;
       return seed;
     }
+    // We begin by sorting the board according to team ID (ascending order).
+    // Next, we shuffle the board starting from the highest index, calling
+    // nextRandomNumber() to select the element to be inserted at the
+    // current tail. The resulting order is used to break ties when the
+    // other criteria fail.
+    board.sort(function (a, b) {
+      return teamInfo[a.team].id - teamInfo[b.team].id;
+    });
     for (var bi = board.length-1; bi >= 0; --bi) {
       var p = nextRandomNumber() % (bi+1),
           t = board[p];

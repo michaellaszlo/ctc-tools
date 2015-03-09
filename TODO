@@ -6,7 +6,7 @@
 + display the participation rankings
 
 + make a deterministic PRNG so that tie-breaking is consistent
-- introduce team IDs to simplify the deterministic pseudo-random ordering
++ introduce team IDs to simplify the deterministic pseudo-random ordering
 - change the button to a vertical slider (no frame, no highlighting)
 - make info boxes
 - check layout in all major browser/OS combinations
