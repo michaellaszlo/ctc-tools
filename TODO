@@ -4,11 +4,15 @@
 + copy tally.js to scoring.js
 + compute monthly participation rankings
 + display the participation rankings
-
 + make a deterministic PRNG so that tie-breaking is consistent
 + introduce team IDs to simplify the deterministic pseudo-random ordering
++ revise the tie procedure: decide lower ranks by lexical order of team name
+
+- add a rollover to the scoring formula: month's score divided by 2
 - change the button to a vertical slider (no frame, no highlighting)
-- make info boxes
+- display summary statistics: mean boats, mean months to win, charts of each
+- make the decay and rollover optional score components (set with checkboxes)
+- make info boxes: logarithm, tie-breaking, summary statistics
 - check layout in all major browser/OS combinations
 
 maybe?

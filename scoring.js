@@ -58,9 +58,9 @@ Scoring.makeRankings = function () {
     // Assign random ranks for tie-breaking purposes.
     // In order to make the results deterministic, we are using a
     // linear congruential generator seeded with the ID of the
-    // month for which the leaderboard is calculated. All future
-    // implementations must use the same method if the leaderboard
-    // archive is to be kept in the same state.
+    // month for which the leaderboard is calculated. Future
+    // implementations must use the same method in order to
+    // reproduce the leaderboard archive consistently.
     // The values of m, a, c are the ones given in Numerical Recipes
     // and reproduced in the Wikipedia article on LCGs:
     //   http://en.wikipedia.org/wiki/Linear_congruential_generator
@@ -105,6 +105,25 @@ Scoring.makeRankings = function () {
       }
       return a.random - b.random;
     });
+    // Rearrange ties at lower ranks according to lexical order of team name.
+    var pos = 1;
+    while (pos < board.length && board[pos].points == board[0].points) {
+      ++pos;
+    }
+    while (pos < board.length) {
+      for (var i = pos+1; i < board.length; ++i) {
+        if (board[i].points != board[pos].points) {
+          break;
+        }
+        if (board[i].team < board[pos].team) {
+          var t = board[pos];
+          board[pos] = board[i];
+          board[i] = t;
+        }
+      }
+      ++pos;
+    }
+    // Store the board.
     monthInfo[id].board = board;
     previousBoard = board;
   }
