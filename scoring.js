@@ -3,7 +3,8 @@ var Scoring = {
   monthInfo: monthInfo,  // script has defined monthIds, monthInfo,
   teamInfo: teamInfo,    // and teamInfo.
   cellWidth: 160, columnGap: 20, winnerGapHorizontal: 16,
-  transpose: { 'horizontal': 'vertical', 'vertical': 'horizontal' }
+  button: { padding: { vertical: 2, horizontal: 6 } },
+  transpose: { horizontal: 'vertical', vertical: 'horizontal' }
 };
 
 Scoring.makeRankings = function () {
@@ -215,27 +216,54 @@ Scoring.makeTable = function (orientation) {
 Scoring.prep = function () {
   var g = Scoring;
   g.makeRankings();
-  // The button switches the table orientation.
-  var button = document.getElementById('button');
-  g.label = {  // These are labels inside the button.
-    horizontal: document.getElementById('horizontal'),
-    vertical: document.getElementById('vertical'),
-  };
   var initialOrientation = 'vertical';
-  g.container = document.getElementById('tallies'),
-  g.makeTable(initialOrientation);
-  // Set the initial state of the buttons.
-  g.label.live = g.label[initialOrientation];
-  g.label.dead = g.label[g.transpose[initialOrientation]];
-  g.label.live.className = 'live';
-  g.label.dead.className = 'dead';
+  g.container = document.getElementById('tallies');
+  //g.makeTable(initialOrientation);
+
+  // The button switches the table orientation.
+  var button = document.getElementById('button'),
+      option = button.getElementsByTagName('div')[0],
+      width = option.offsetWidth,
+      height = option.offsetHeight;
+  option.style.width = (width - 2*g.button.padding.horizontal) + 'px';
+  option.style.height = (height - 2*g.button.padding.vertical) + 'px';
+  /*
+  option.style.position = 'absolute';
+  option.style.top = '0';
+  option.style.left = '0';
+  */
+  console.log(option.offsetWidth+' '+option.offsetHeight);
+  g.label = {};
+  var names = ['vertical', 'horizontal'];
+  for (var i = 0; i < names.length; ++i) {
+    var name = names[i],
+        label = document.createElement('div');
+    label.id = label.innerHTML = name;
+    label.className = 'option';
+    if (name == initialOrientation) {
+      label.className + ' live';
+      g.label.live = label;
+    } else {
+      label.className + ' dead';
+      g.label.dead = label;
+    }
+    label.style.width = (width - 2*g.button.padding.horizontal) + 'px';
+    label.style.height = (height - 2*g.button.padding.vertical) + 'px';
+    label.style.position = 'absolute';
+    label.style.top = '0';
+    label.style.left = '0';
+    //button.appendChild(label);
+    label.style.visibility = 'visible';
+  };
+
   // Define an orientation switcher.
   button.onclick = function () {
+    console.log(option.offsetWidth+' '+option.offsetHeight);
     var t = g.label.live;
     g.label.live = g.label.dead;
     g.label.dead = t;
-    g.label.live.className = 'live';
-    g.label.dead.className = 'dead';
+    g.label.live.className = 'option live';
+    g.label.dead.className = 'option dead';
     g.makeTable(g.label.live.id);
   };
 };

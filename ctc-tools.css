@@ -52,39 +52,24 @@ ul {
 }
 
 #layout {
-  position: absolute;
-  top: 390px;
-  left: 620px;
+  margin: 10px 0;
 }
 #button {
+  display: inline;
   cursor: pointer;
+  position: relative;
+  border: 1px solid #000;
 }
-#button span {
-  border-top: 1px solid #335db2;
-  border-bottom: 1px solid #335db2;
+#button .option {
+  display: inline;
   padding: 2px 6px;
+  background: #eee;
 }
-#button:hover span {
-  border-top: 1px solid #911d1d;
-  border-bottom: 1px solid #911d1d;
-}
-#button:hover #horizontal {
-  border-left: 1px solid #911d1d;
-}
-#button:hover #vertical {
-  border-right: 1px solid #911d1d;
-}
-#horizontal {
-  border-left: 1px solid #335db2;
-}
-#vertical {
-  border-right: 1px solid #335db2;
-}
-#button span.dead {
+#button .option.dead {
   background: #fff;
   color: #888;
 }
-#button span.live {
+#button .option.live {
   background: #ddd;
   color: #000;
 }
