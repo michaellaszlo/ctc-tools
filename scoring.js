@@ -221,23 +221,13 @@ Scoring.prep = function () {
   //g.makeTable(initialOrientation);
 
   // The button switches the table orientation.
-  var button = document.getElementById('button'),
-      option = button.getElementsByTagName('div')[0],
-      width = option.offsetWidth,
-      height = option.offsetHeight;
-  option.style.width = (width - 2*g.button.padding.horizontal) + 'px';
-  option.style.height = (height - 2*g.button.padding.vertical) + 'px';
-  /*
-  option.style.position = 'absolute';
-  option.style.top = '0';
-  option.style.left = '0';
-  */
-  console.log(option.offsetWidth+' '+option.offsetHeight);
+  var button = document.getElementById('button');
   g.label = {};
   var names = ['vertical', 'horizontal'];
   for (var i = 0; i < names.length; ++i) {
     var name = names[i],
         label = document.createElement('div');
+    g.label[name] = label;
     label.id = label.innerHTML = name;
     label.className = 'option';
     if (name == initialOrientation) {
@@ -247,23 +237,37 @@ Scoring.prep = function () {
       label.className + ' dead';
       g.label.dead = label;
     }
-    label.style.width = (width - 2*g.button.padding.horizontal) + 'px';
-    label.style.height = (height - 2*g.button.padding.vertical) + 'px';
     label.style.position = 'absolute';
     label.style.top = '0';
     label.style.left = '0';
-    //button.appendChild(label);
+    button.appendChild(label);
     label.style.visibility = 'visible';
   };
 
+  function adjustHeight() {
+    if (g.label.dead == g.label.vertical) {
+      g.label.dead.style.top = -g.label.dead.offsetHeight + 'px';
+    } else {
+      g.label.dead.style.top = g.label.dead.offsetHeight + 'px';
+    }
+  }
+  window.setTimeout(function () {
+    button.style.width = g.label.horizontal.offsetWidth + 'px';
+    g.label.vertical.style.width = g.label.horizontal.offsetWidth + 'px';
+    g.label.vertical.style.height = g.label.horizontal.offsetHeight + 'px';
+    g.label.live.style.top = '0';
+    adjustHeight();
+  }, 250);
+
   // Define an orientation switcher.
   button.onclick = function () {
-    console.log(option.offsetWidth+' '+option.offsetHeight);
     var t = g.label.live;
     g.label.live = g.label.dead;
     g.label.dead = t;
     g.label.live.className = 'option live';
     g.label.dead.className = 'option dead';
+    g.label.live.style.top = '0';
+    adjustHeight();
     g.makeTable(g.label.live.id);
   };
 };

@@ -63,7 +63,8 @@ ul {
 #button .option {
   display: inline;
   padding: 2px 6px;
-  background: #eee;
+  position: absolute;
+  left: 0;
 }
 #button .option.dead {
   background: #fff;
