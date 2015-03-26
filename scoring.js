@@ -3,8 +3,9 @@ var Scoring = {
   monthInfo: monthInfo,  // script has defined monthIds, monthInfo,
   teamInfo: teamInfo,    // and teamInfo.
   cellWidth: 160, columnGap: 20, winnerGapHorizontal: 16,
-  button: { padding: { vertical: 2, horizontal: 6 } },
-  transpose: { horizontal: 'vertical', vertical: 'horizontal' }
+  optionPadding: { height: 2, width: 6 },
+  transpose: { horizontal: 'vertical', vertical: 'horizontal' },
+  initialOrientation: 'vertical'
 };
 
 Scoring.makeRankings = function () {
@@ -213,63 +214,84 @@ Scoring.makeTable = function (orientation) {
   g.table[orientation].style.display = 'block';
 };
 
-Scoring.prep = function () {
+Scoring.fontsActive = function () {
+  var g = Scoring;
+  g.adjustOptionsEverything();
+};
+
+Scoring.adjustOptionsEverything = function () {
+  var g = Scoring,
+      dummy = g.option.dummy,
+      width = dummy.offsetWidth - 2*g.optionPadding.width,
+      height = dummy.offsetHeight - 2*g.optionPadding.height,
+      left = dummy.offsetLeft;
+  g.option.vertical.style.width = width + 'px';
+  g.option.horizontal.style.width = width + 'px';
+  g.option.vertical.style.height = height + 'px';
+  g.option.horizontal.style.height = height + 'px';
+  g.option.vertical.style.left = left + 'px';
+  g.option.horizontal.style.left = left + 'px';
+  g.adjustOptionsVertical();
+};
+
+Scoring.adjustOptionsVertical = function () {
+  var g = Scoring,
+      dummy = g.option.dummy,
+      top = dummy.offsetTop,
+      height = dummy.offsetHeight;
+  if (g.option.vertical == g.option.live) {
+    g.option.vertical.style.top = top + 'px';
+    g.option.horizontal.style.top = top + height + 'px';
+  } else {
+    g.option.vertical.style.top = top - height + 'px';
+    g.option.horizontal.style.top = top + 'px';
+  }
+};
+
+Scoring.load = function () {
   var g = Scoring;
   g.makeRankings();
-  var initialOrientation = 'vertical';
   g.container = document.getElementById('tallies');
-  //g.makeTable(initialOrientation);
+  g.makeTable(g.initialOrientation);
 
-  // The button switches the table orientation.
-  var button = document.getElementById('button');
-  g.label = {};
+  // Make option elements for switching table orientation.
+  var layout = document.getElementById('layout'),
+      dummy = layout.getElementsByTagName('div')[0],
+      optionWidth = dummy.offsetWidth,
+      optionHeight = dummy.offsetHeight;
+  g.option = { dummy: dummy };
   var names = ['vertical', 'horizontal'];
   for (var i = 0; i < names.length; ++i) {
     var name = names[i],
-        label = document.createElement('div');
-    g.label[name] = label;
-    label.id = label.innerHTML = name;
-    label.className = 'option';
-    if (name == initialOrientation) {
-      label.className + ' live';
-      g.label.live = label;
+        option = document.createElement('div');
+    g.option[name] = option;
+    option.id = option.innerHTML = name;
+    option.className = 'option';
+    if (name == g.initialOrientation) {
+      option.className += ' live';
+      g.option.live = option;
     } else {
-      label.className + ' dead';
-      g.label.dead = label;
+      option.className += ' dead';
+      g.option.dead = option;
     }
-    label.style.position = 'absolute';
-    label.style.top = '0';
-    label.style.left = '0';
-    button.appendChild(label);
-    label.style.visibility = 'visible';
-  };
-
-  function adjustHeight() {
-    if (g.label.dead == g.label.vertical) {
-      g.label.dead.style.top = -g.label.dead.offsetHeight + 'px';
-    } else {
-      g.label.dead.style.top = g.label.dead.offsetHeight + 'px';
+    option.onmouseover = function () {
+      g.option.dead.className = 'option dead glow';
     }
-  }
-  window.setTimeout(function () {
-    button.style.width = g.label.horizontal.offsetWidth + 'px';
-    g.label.vertical.style.width = g.label.horizontal.offsetWidth + 'px';
-    g.label.vertical.style.height = g.label.horizontal.offsetHeight + 'px';
-    g.label.live.style.top = '0';
-    adjustHeight();
-  }, 250);
-
-  // Define an orientation switcher.
-  button.onclick = function () {
-    var t = g.label.live;
-    g.label.live = g.label.dead;
-    g.label.dead = t;
-    g.label.live.className = 'option live';
-    g.label.dead.className = 'option dead';
-    g.label.live.style.top = '0';
-    adjustHeight();
-    g.makeTable(g.label.live.id);
+    option.onmouseout = function () {
+      g.option.dead.className = 'option dead';
+    }
+    option.onclick = function () {
+      var t = g.option.live;
+      g.option.live = g.option.dead;
+      g.option.dead = t;
+      g.option.live.className = 'option live';
+      g.option.dead.className = 'option dead';
+      g.adjustOptionsVertical();
+      g.makeTable(g.option.live.id);
+    }
+    layout.appendChild(option);
   };
+  g.adjustOptionsEverything();
 };
 
-window.onload = Scoring.prep;
+window.onload = Scoring.load;

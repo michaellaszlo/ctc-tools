@@ -52,27 +52,30 @@ ul {
 }
 
 #layout {
-  margin: 10px 0;
-}
-#button {
-  display: inline;
-  cursor: pointer;
+  margin: 20px 0 30px;
   position: relative;
-  border: 1px solid #000;
 }
-#button .option {
+#layout .option {
   display: inline;
+  text-align: center;
   padding: 2px 6px;
   position: absolute;
-  left: 0;
+  cursor: pointer;
+  border-radius: 2px;
 }
-#button .option.dead {
-  background: #fff;
-  color: #888;
+#layout .option.dummy {
+  position: relative;
 }
-#button .option.live {
-  background: #ddd;
+#layout .option.live {
+  background: #dde5ea;
   color: #000;
+}
+#layout .option.dead.glow {
+  background: #ecead6;
+}
+#layout .option.dead {
+  background: #fff;
+  color: #2b4b84;
 }
 
 table {
