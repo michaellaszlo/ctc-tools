@@ -131,6 +131,42 @@ Scoring.makeRankings = function () {
   }
 };
 
+Scoring.makeSummary = function (orientation) {
+  var g = Scoring,
+      monthInfo = g.monthInfo,
+      monthIds = g.monthIds,
+      teamInfo = g.teamInfo,
+      summary = [];
+  for (var monthIndex = 0; monthIndex < monthIds.length; ++monthIndex) {
+    var board = monthInfo[monthIds[monthIndex]].tally;
+    console.log(JSON.stringify(board));
+    for (var rank = 0; rank < board.length; ++rank) {
+      var team = board[rank].team,
+          boats = board[rank].boats,
+          info = teamInfo[team];
+      if (info.firstMonthIndex === undefined) {
+        summary.push(info);
+        info.firstMonthIndex = monthIndex;
+        info.sumBoats = 0;
+      }
+      info.sumBoats += boats;
+    }
+  }
+  for (var i = 0; i < summary.length; ++i) {
+    var info = summary[i],
+        numMonths = monthIds.length - info.firstMonthIndex;
+    info.meanMonths = info.sumBoats / numMonths;
+  }
+  summary.sort(function (a, b) {
+    if (a.meanMonths != b.meanMonths) {
+      return b.meanMonths - a.meanMonths;
+    }
+    return (a.team < b.team ? -1 : 1);
+  });
+  console.log(JSON.stringify(summary));
+  var container = document.getElementById('summary');
+};
+
 Scoring.makeTable = function (orientation) {
   var g = Scoring,
       monthInfo = g.monthInfo;
@@ -251,6 +287,7 @@ Scoring.adjustOptionsVertical = function () {
 Scoring.load = function () {
   var g = Scoring;
   g.makeRankings();
+  g.makeSummary();
   g.container = document.getElementById('tallies');
   g.makeTable(g.initialOrientation);
 
