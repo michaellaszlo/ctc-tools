@@ -137,33 +137,59 @@ Scoring.makeSummary = function (orientation) {
       monthIds = g.monthIds,
       teamInfo = g.teamInfo,
       summary = [];
-  for (var monthIndex = 0; monthIndex < monthIds.length; ++monthIndex) {
-    var board = monthInfo[monthIds[monthIndex]].tally;
+  for (var i = 0; i < monthIds.length; ++i) {
+    var board = monthInfo[monthIds[i]].board;
     console.log(JSON.stringify(board));
     for (var rank = 0; rank < board.length; ++rank) {
       var team = board[rank].team,
           boats = board[rank].boats,
           info = teamInfo[team];
-      if (info.firstMonthIndex === undefined) {
+      if (info.firstMonth === undefined) {
+        info.firstMonth = i;
         summary.push(info);
-        info.firstMonthIndex = monthIndex;
+        info.team = team;
         info.sumBoats = 0;
+        info.winMonths = [];
       }
       info.sumBoats += boats;
+      if (rank == 0) {
+        info.winMonths.push(i);
+      }
     }
   }
   for (var i = 0; i < summary.length; ++i) {
     var info = summary[i],
-        numMonths = monthIds.length - info.firstMonthIndex;
-    info.meanMonths = info.sumBoats / numMonths;
+        numMonths = monthIds.length - info.firstMonth;
+    info.meanBoats = info.sumBoats / numMonths;
+    var winMonths = info.winMonths;
+    if (winMonths.length != 0) {  // else info.meanWinInterval is undefined
+      var winIntervalSum = winMonths[0] - info.firstMonth;
+      for (var j = 1; j < winMonths.length; ++j) {
+        winIntervalSum += winMonths[j] - winMonths[j-1];
+      }
+      info.meanWinInterval = winIntervalSum / winMonths.length;
+    }
   }
   summary.sort(function (a, b) {
-    if (a.meanMonths != b.meanMonths) {
-      return b.meanMonths - a.meanMonths;
+    if (a.meanBoats != b.meanBoats) {
+      return b.meanBoats - a.meanBoats;
+    }
+    if (a.meanWinInterval !== b.meanWinInterval) {
+      if (a.meanWinInterval === undefined || b.meanWinInterval === undefined) {
+        return a.meanWinInterval === undefined ? 1 : -1;
+      }
+      return b.meanWinInterval - a.meanWinInterval;
     }
     return (a.team < b.team ? -1 : 1);
   });
-  console.log(JSON.stringify(summary));
+  for (var i = summary.length-1; i >= 0; --i) {
+    var info = summary[i],
+        team = info.team,
+        winMonths = info.winMonths,
+        meanWinInterval = info.meanWinInterval,
+        meanBoats = info.meanBoats;
+    console.log(team+' '+meanBoats+' '+meanWinInterval+' '+winMonths);
+  }
   var container = document.getElementById('summary');
 };
 
