@@ -80,12 +80,15 @@ ul {
 
 table {
   padding-right: 20px;
+}
+
+table.board {
   border-collapse: separate;
   border-spacing: 0;
   table-layout: fixed;
 }
 
-td {
+table.board td {
   padding-top: 1px;
   padding-bottom: 2px;
   height: 35px;
@@ -93,8 +96,6 @@ td {
   padding-left: 10px;
   position: relative;
   font-size: 12px;
-}
-table.board td {
   height: 45px;
 }
 td.date {
@@ -141,3 +142,18 @@ td a:hover {
   color: #911d1d;
 }
 
+table.summary {
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+table.summary td {
+  padding: 2px 10px 2px 0;
+}
+
+td.number {
+  font-family: Inconsolata, Courier, monospace;
+  font-weight: 400;
+  font-size: 14px;
+  text-align: right;
+}

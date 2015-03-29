@@ -139,7 +139,6 @@ Scoring.makeSummary = function (orientation) {
       summary = [];
   for (var i = 0; i < monthIds.length; ++i) {
     var board = monthInfo[monthIds[i]].board;
-    console.log(JSON.stringify(board));
     for (var rank = 0; rank < board.length; ++rank) {
       var team = board[rank].team,
           boats = board[rank].boats,
@@ -185,18 +184,25 @@ Scoring.makeSummary = function (orientation) {
   var container = document.getElementById('summary'),
       table = document.createElement('table'),
       tbody = document.createElement('tbody');
-  for (var i = summary.length-1; i >= 0; --i) {
+  table.className = 'summary';
+  for (var i = 0; i < summary.length; ++i) {
     var info = summary[i],
-        fields = [info.team, g.roundDecimal(info.meanBoats, 1),
-                  g.roundDecimal(info.meanWinInterval)],
+        fields = [
+          info.team,
+          g.roundDecimal(info.meanBoats, 2),
+          info.meanWinInterval === undefined ? '&minus;' :
+              g.roundDecimal(info.meanWinInterval, 2)
+        ],
         tr = document.createElement('tr');
     for (var j = 0; j < fields.length; ++j) {
       td = document.createElement('td');
       td.innerHTML = fields[j];
       tr.appendChild(td);
+      if (j != 0) {
+        td.className = 'number';
+      }
     }
     tbody.appendChild(tr);
-    console.log(info.team+' '+info.meanBoats+' '+info.meanWinInterval+' '+info.winMonths);
   }
   table.appendChild(tbody);
   container.appendChild(table);
@@ -204,11 +210,11 @@ Scoring.makeSummary = function (orientation) {
 
 Scoring.roundDecimal = function (x, digits) {
   var factor = Math.pow(10, digits),
-      s = '' + Math.round(factor * x) / factor;
+      s = Math.round(factor * x) / factor + '';
   if (s.indexOf('.') == -1) {
     s += '.';
   }
-  for (var i = digits - (s.length - s.indexOf('.') - 1); i != 0; --i) {
+  for (var i = digits - (s.length - 1 - s.indexOf('.')); i != 0; --i) {
     s += '0';
   }
   return s;
