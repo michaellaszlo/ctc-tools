@@ -182,15 +182,36 @@ Scoring.makeSummary = function (orientation) {
     }
     return (a.team < b.team ? -1 : 1);
   });
+  var container = document.getElementById('summary'),
+      table = document.createElement('table'),
+      tbody = document.createElement('tbody');
   for (var i = summary.length-1; i >= 0; --i) {
     var info = summary[i],
-        team = info.team,
-        winMonths = info.winMonths,
-        meanWinInterval = info.meanWinInterval,
-        meanBoats = info.meanBoats;
-    console.log(team+' '+meanBoats+' '+meanWinInterval+' '+winMonths);
+        fields = [info.team, g.roundDecimal(info.meanBoats, 1),
+                  g.roundDecimal(info.meanWinInterval)],
+        tr = document.createElement('tr');
+    for (var j = 0; j < fields.length; ++j) {
+      td = document.createElement('td');
+      td.innerHTML = fields[j];
+      tr.appendChild(td);
+    }
+    tbody.appendChild(tr);
+    console.log(info.team+' '+info.meanBoats+' '+info.meanWinInterval+' '+info.winMonths);
   }
-  var container = document.getElementById('summary');
+  table.appendChild(tbody);
+  container.appendChild(table);
+};
+
+Scoring.roundDecimal = function (x, digits) {
+  var factor = Math.pow(10, digits),
+      s = '' + Math.round(factor * x) / factor;
+  if (s.indexOf('.') == -1) {
+    s += '.';
+  }
+  for (var i = digits - (s.length - s.indexOf('.') - 1); i != 0; --i) {
+    s += '0';
+  }
+  return s;
 };
 
 Scoring.makeTable = function (orientation) {
