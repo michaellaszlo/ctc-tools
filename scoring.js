@@ -149,8 +149,10 @@ Scoring.makeSummary = function (orientation) {
         info.team = team;
         info.sumBoats = 0;
         info.winMonths = [];
+        info.boatsPerMonth = {};
       }
       info.sumBoats += boats;
+      info.boatsPerMonth[monthIds[i]] = boats;
       if (rank == 0) {
         info.winMonths.push(i);
       }
@@ -203,6 +205,16 @@ Scoring.makeSummary = function (orientation) {
       }
     }
     tbody.appendChild(tr);
+    var data = [];
+    for (var mi = 0; mi < monthIds.length; ++mi) {
+      var monthId = monthIds[mi],
+          boats = info.boatsPerMonth[monthId];
+      if (boats === undefined) {
+        boats = 0;
+      }
+      data.push(boats);
+    }
+    console.log(info.team+' '+data);
   }
   table.appendChild(tbody);
   container.appendChild(table);
