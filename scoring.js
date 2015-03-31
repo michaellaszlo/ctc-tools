@@ -5,6 +5,7 @@ var Scoring = {
   cellWidth: 160, columnGap: 20, winnerGapHorizontal: 16,
   optionPadding: { height: 2, width: 6 },
   transpose: { horizontal: 'vertical', vertical: 'horizontal' },
+  chart: { barWidth: 5, barHeight: 1 },
   initialOrientation: 'vertical'
 };
 
@@ -158,6 +159,7 @@ Scoring.makeSummary = function (orientation) {
       }
     }
   }
+  var maxBoats = 0;
   for (var i = 0; i < summary.length; ++i) {
     var info = summary[i],
         numMonths = monthIds.length - info.firstMonth;
@@ -169,6 +171,13 @@ Scoring.makeSummary = function (orientation) {
         winIntervalSum += winMonths[j] - winMonths[j-1];
       }
       info.meanWinInterval = winIntervalSum / winMonths.length;
+    }
+    var monthlyBoats = info.monthlyBoats = [];
+    for (var mi = 0; mi < monthIds.length; ++mi) {
+      var monthId = monthIds[mi],
+          boats = info.boatsPerMonth[monthId] || 0;
+      monthlyBoats.push(boats);
+      maxBoats = Math.max(maxBoats, boats);
     }
   }
   summary.sort(function (a, b) {
@@ -185,36 +194,42 @@ Scoring.makeSummary = function (orientation) {
   });
   var container = document.getElementById('summary'),
       table = document.createElement('table'),
-      tbody = document.createElement('tbody');
+      tbody = document.createElement('tbody'),
+      barWidth = g.chart.barWidth,
+      barHeight = g.chart.barHeight;
   table.className = 'summary';
   for (var i = 0; i < summary.length; ++i) {
     var info = summary[i],
-        fields = [
-          info.team,
-          g.roundDecimal(info.meanBoats, 2),
-          info.meanWinInterval === undefined ? '&minus;' :
-              g.roundDecimal(info.meanWinInterval, 2)
-        ],
+        fields = [info.team, g.roundDecimal(info.meanBoats, 2),
+          info.meanWinInterval === undefined ?
+              '&minus;' : g.roundDecimal(info.meanWinInterval, 2)],
         tr = document.createElement('tr');
     for (var j = 0; j < fields.length; ++j) {
-      td = document.createElement('td');
+      var td = document.createElement('td');
       td.innerHTML = fields[j];
       tr.appendChild(td);
       if (j != 0) {
         td.className = 'number';
       }
     }
-    tbody.appendChild(tr);
-    var data = [];
-    for (var mi = 0; mi < monthIds.length; ++mi) {
-      var monthId = monthIds[mi],
-          boats = info.boatsPerMonth[monthId];
-      if (boats === undefined) {
-        boats = 0;
-      }
-      data.push(boats);
+    var canvas = document.createElement('canvas'),
+        context = canvas.getContext('2d'),
+        numMonths = monthIds.length,
+        td = document.createElement('td'),
+        monthlyBoats = info.monthlyBoats;
+    canvas.width = barWidth * numMonths;
+    canvas.height = barHeight * maxBoats;
+    context.fillStyle = '#' + info.color;
+    for (var mi = 0; mi < numMonths; ++mi) {
+      var boats = monthlyBoats[mi];
+      context.fillRect(barWidth * (numMonths - mi - 1),
+          barHeight * (maxBoats - boats),
+          barWidth, barHeight * boats);
     }
-    console.log(info.team+' '+data);
+    td.appendChild(canvas);
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+    console.log(info.monthlyBoats);
   }
   table.appendChild(tbody);
   container.appendChild(table);
