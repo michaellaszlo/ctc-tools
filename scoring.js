@@ -150,12 +150,14 @@ Scoring.makeSummary = function (orientation) {
         info.team = team;
         info.sumBoats = 0;
         info.winMonths = [];
+        info.isWinMonth = {};
         info.boatsPerMonth = {};
       }
       info.sumBoats += boats;
       info.boatsPerMonth[monthIds[i]] = boats;
       if (rank == 0) {
         info.winMonths.push(i);
+        info.isWinMonth[i] = true;
       }
     }
   }
@@ -216,20 +218,25 @@ Scoring.makeSummary = function (orientation) {
         context = canvas.getContext('2d'),
         numMonths = monthIds.length,
         td = document.createElement('td'),
-        monthlyBoats = info.monthlyBoats;
+        monthlyBoats = info.monthlyBoats,
+        isWinMonth = info.isWinMonth;
     canvas.width = barWidth * numMonths;
     canvas.height = barHeight * maxBoats;
     context.fillStyle = '#' + info.color;
     for (var mi = 0; mi < numMonths; ++mi) {
-      var boats = monthlyBoats[mi];
-      context.fillRect(barWidth * (numMonths - mi - 1),
-          barHeight * (maxBoats - boats),
-          barWidth, barHeight * boats);
+      var boats = monthlyBoats[mi],
+          x = barWidth * (numMonths - mi - 1),
+          y = barHeight * (maxBoats - boats);
+      context.fillRect(x, y, barWidth, barHeight * boats);
+      if (info.isWinMonth[mi]) {
+        context.fillStyle = '#a92121';
+        context.fillRect(x+Math.floor(barWidth/2), 0, 1, barHeight * maxBoats);
+        context.fillStyle = '#' + info.color;
+      }
     }
     td.appendChild(canvas);
     tr.appendChild(td);
     tbody.appendChild(tr);
-    console.log(info.monthlyBoats);
   }
   table.appendChild(tbody);
   container.appendChild(table);
