@@ -18,6 +18,7 @@
 maybe?
   - display rank numbers
   - illuminate column and/or row on hover
+  - summary charts: show data on hover
   - use getComputedStyle to synchronize JS with CSS
   - experiment with other ranking formulae
   - do something about text on dark backgrounds

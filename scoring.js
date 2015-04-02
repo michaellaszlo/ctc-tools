@@ -132,6 +132,17 @@ Scoring.makeRankings = function () {
   }
 };
 
+Scoring.makeElement = function (tag, innerHTML, className) {
+  var element = document.createElement(tag);
+  if (innerHTML !== undefined) {
+    element.innerHTML = innerHTML;
+  }
+  if (className !== undefined) {
+    element.className = className;
+  }
+  return element;
+};
+
 Scoring.makeSummary = function (orientation) {
   var g = Scoring,
       monthInfo = g.monthInfo,
@@ -198,7 +209,15 @@ Scoring.makeSummary = function (orientation) {
       table = document.createElement('table'),
       tbody = document.createElement('tbody'),
       barWidth = g.chart.barWidth,
-      barHeight = g.chart.barHeight;
+      barHeight = g.chart.barHeight,
+      tr = document.createElement('tr');
+  tr.appendChild(g.makeElement('td'));
+  tr.appendChild(g.makeElement('td', 'mean boats<br />per month', 'header'));
+  tr.appendChild(g.makeElement('td', 'mean months<br />until first place',
+      'header'));
+  tr.appendChild(g.makeElement('td', 'history of boats per month and wins',
+      'header chart'));
+  tbody.appendChild(tr);
   table.className = 'summary';
   for (var i = 0; i < summary.length; ++i) {
     var info = summary[i],
@@ -207,12 +226,11 @@ Scoring.makeSummary = function (orientation) {
               '&minus;' : g.roundDecimal(info.meanWinInterval, 2)],
         tr = document.createElement('tr');
     for (var j = 0; j < fields.length; ++j) {
-      var td = document.createElement('td');
-      td.innerHTML = fields[j];
-      tr.appendChild(td);
+      var td = g.makeElement('td', fields[j]);
       if (j != 0) {
         td.className = 'number';
       }
+      tr.appendChild(td);
     }
     var canvas = document.createElement('canvas'),
         context = canvas.getContext('2d'),

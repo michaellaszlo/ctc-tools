@@ -144,18 +144,27 @@ td a:hover {
 
 table.summary {
   border-collapse: collapse;
-  font-size: 16px;
+  font-size: 15px;
 }
 
 .summary td {
   padding-right: 15px;
 }
 
-td.number {
+.summary td.number {
   font-family: Inconsolata, Courier, monospace;
   font-weight: 400;
-  font-size: 18px;
+  font-size: 16px;
   text-align: right;
+}
+
+.summary td.header {
+  font-size: 13px;
+  text-align: right;
+}
+.summary td.header.chart {
+  text-align: left;
+  padding-left: 5px;
 }
 
 .summary canvas {
