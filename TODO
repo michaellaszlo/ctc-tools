@@ -10,9 +10,10 @@
 + change the button to a vertical stack
 + display summary statistics: mean boats, mean months to win, charts
 + add a winner's rollover to the scoring formula: month's score divided by 2
++ make info boxes
 
 necessary
-- make info boxes: logarithm, tie-breaking, summary statistics
+- fill out the info box explaining the scoring formula
 - check layout in all major browser/OS combinations
 
 probable
@@ -23,8 +24,8 @@ probable
 
 potential
 - make the decay and rollover optional (toggle with checkboxes)
-- use getComputedStyle to synchronize JS with CSS
 - experiment with other ranking formulae
+- use getComputedStyle to synchronize JS with CSS
 - do something about text on dark backgrounds
 - add controls to enlarge chart
 

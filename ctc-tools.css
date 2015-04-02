@@ -14,8 +14,8 @@ b {
   font-weight: 600;
 }
 
-h2 {
-  padding: 15px 0 5px;
+h2, h3 {
+  padding: 20px 0 10px;
 }
 
 p, ul {
@@ -26,7 +26,7 @@ p, ul {
   font-family: Inconsolata, Courier, monospace;
   font-weight: 700;
 }
-.question {
+.toggle {
   color: #666;
   background: #efebce;
   padding: 0 4px 1px;
@@ -34,12 +34,27 @@ p, ul {
   border-radius: 5px;
   cursor: pointer;
 }
-.question:hover {
+.toggle.hide {
+  border-top: 1px dotted #999;
+  border-bottom: none;
+}
+.toggle.hide:hover {
+  border-top: 1px solid #666;
+  border-bottom: none;
+}
+.toggle:hover {
   color: #222;
   border-bottom: 1px solid #666;
 }
-.answer {
-  color: #ccc;
+.infoBox {
+  border: 2px solid #e8e6d4;
+  background: #f7f5e8;
+  margin: 5px 0;
+  padding: 5px 10px;
+  display: none;
+}
+.infoBox.show {
+  display: block;
 }
 
 #wrapper {

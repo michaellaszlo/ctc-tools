@@ -181,14 +181,14 @@ Scoring.makeSummary = function (orientation) {
   for (var i = 0; i < summary.length; ++i) {
     var info = summary[i],
         numMonths = monthIds.length - info.firstMonth;
-    info.meanBoats = info.sumBoats / numMonths;
+    info.meanBoats = g.round(info.sumBoats / numMonths, 2);
     var winMonths = info.winMonths;
     if (winMonths.length != 0) {  // else info.meanWinInterval is undefined
       var winIntervalSum = winMonths[0] - info.firstMonth;
       for (var j = 1; j < winMonths.length; ++j) {
         winIntervalSum += winMonths[j] - winMonths[j-1];
       }
-      info.meanWinInterval = winIntervalSum / winMonths.length;
+      info.meanWinInterval = g.round(winIntervalSum / winMonths.length, 2);
     }
     var monthlyBoats = info.monthlyBoats = [];
     for (var mi = 0; mi < monthIds.length; ++mi) {
@@ -220,15 +220,15 @@ Scoring.makeSummary = function (orientation) {
   tr.appendChild(g.makeElement('td', 'mean boats<br />per month', 'header'));
   tr.appendChild(g.makeElement('td', 'mean months<br />until first place',
       'header'));
-  tr.appendChild(g.makeElement('td', 'history of boats per month',
+  tr.appendChild(g.makeElement('td', 'historical record: boats per month',
       'header chart'));
   tbody.appendChild(tr);
   table.className = 'summary';
   for (var i = 0; i < summary.length; ++i) {
     var info = summary[i],
-        fields = [info.team, g.roundDecimal(info.meanBoats, 2),
-          info.meanWinInterval === undefined ?
-              '&minus;' : g.roundDecimal(info.meanWinInterval, 2)],
+        fields = [info.team, info.meanBoats,
+                  info.meanWinInterval === undefined ?
+                  '&minus;' : info.meanWinInterval],
         tr = document.createElement('tr');
     for (var j = 0; j < fields.length; ++j) {
       var td = g.makeElement('td', fields[j]);
@@ -265,7 +265,7 @@ Scoring.makeSummary = function (orientation) {
   container.appendChild(table);
 };
 
-Scoring.roundDecimal = function (x, digits) {
+Scoring.round = function (x, digits) {
   var factor = Math.pow(10, digits),
       s = Math.round(factor * x) / factor + '';
   if (s.indexOf('.') == -1) {
@@ -394,8 +394,79 @@ Scoring.adjustOptionsVertical = function () {
   }
 };
 
+Scoring.classAdd = function (element, name) {
+  if (!element.className) {
+    element.className = name;
+  } else {
+    element.className += ' '+name;
+  }
+};
+
+Scoring.classRemove = function (element, name) {
+  if (!element.className) {
+    return;
+  }
+  var names = element.className.split(/\s+/),
+      newClasses = [];
+  for (var i = 0; i < names.length; ++i) {
+    if (names[i] !== name) {
+      newClasses.push(names[i]);
+    }
+  }
+  element.className = newClasses.join(' ');
+};
+
+Scoring.classIncludes = function (element, name) {
+  if (!element.className) {
+    return false;
+  }
+  var names = element.className.split(/\s+/);
+  for (var i = 0; i < names.length; ++i) {
+    if (names[i] == name) {
+      return true;
+    }
+  }
+  return false;
+};
+
+Scoring.getElementsByClass = function (container, tag, name) {
+  var g = Scoring,
+      elements = container.getElementsByTagName(tag),
+      result = [];
+  for (var i = 0; i < elements.length; ++i) {
+    if (g.classIncludes(elements[i], name)) {
+      result.push(elements[i]);
+    }
+  }
+  return result;
+};
+
+Scoring.makeToggleHandler = function (toggle, infoBox) {
+  var g = Scoring;
+  return function () {
+    if (g.classIncludes(infoBox, 'show')) {
+      g.classRemove(infoBox, 'show');
+      g.classRemove(toggle, 'hide');
+      toggle.innerHTML = toggle.originalHTML;
+    } else {
+      g.classAdd(infoBox, 'show');
+      g.classAdd(toggle, 'hide');
+      toggle.originalHTML = toggle.innerHTML;
+      toggle.innerHTML = '&#9660; Hide';
+    }
+  }
+};
+
 Scoring.load = function () {
   var g = Scoring;
+
+  // Activate toggle switches for info boxes.
+  var toggles = g.getElementsByClass(document, 'span', 'toggle'),
+      infoBoxes = g.getElementsByClass(document, 'div', 'infoBox');
+  for (var i = 0; i < toggles.length; ++i) {
+    toggles[i].onclick = g.makeToggleHandler(toggles[i], infoBoxes[i]);
+  }
+
   g.makeRankings();
   g.makeSummary();
   g.container = document.getElementById('tallies');

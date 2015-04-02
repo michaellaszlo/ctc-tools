@@ -42,19 +42,34 @@ has floated in the current month. </p>
 by a team. Then: </p>
 
 <ul>
-  <li> &bull; If <span class="math">x</span> is greater than zero, the
-  team gains <span class="math">floor(100&middot;log(x+1))</span> points. <span class="question">&diams; What does the formula mean?</span>
+  <li>
+    &bull; If <span class="math">x</span> is greater than zero, the
+    team gains <span class="math">floor(100&middot;log(x+1))</span> points.
+    <span class="toggle">&#9654; What does the formula mean?</span>
   </li>
-  <li>  &bull; If <span class="math">x</span> is zero, the
-  team loses 20% of its total.
+
+<div class="infoBox">
+
+The logarithmic function is the inverse of exponentiation.
+
+</div><!--end infoBox-->
+
+  <li> 
+    &bull; If <span class="math">x</span> is zero, the
+    team loses 20% of its total.
   </li>
 </ul>
 
-<p> Teams are ranked according to their total. <span class="question">&diams; How
-are ties broken?</span> </p>
+<p> Teams are ranked according to their total.
+  <span class="toggle">&#9654; How are ties broken?</span> </p>
 
-<div class="answer"> <p> Ties for first place are broken according
-to the following rules: </p>
+<div class="infoBox">
+
+<p> Ties for first place should occur rarely. With this formula,
+there are no ties in the past nine years of CTC data. </p>
+
+<p> If there is a tie for first place, it is broken according to
+the following rules: </p>
 
 <ul>
   <li> &bull; A team that has never chosen a challenge is preferred. </li>
@@ -62,11 +77,7 @@ to the following rules: </p>
   <li> &bull; If there is still a tie, the winner is chosen randomly. </li>
 </ul>
 
-<p> Note: Due to the precision of the scoring formula, ties for
-first place occur infrequently. For the past nine years of CTC data,
-there are no such ties with this formula. </p>
-
-</div>
+</div><!--end infoBox-->
 
 <p> The team in first place wins the right to select the next
 challenge, and its total is reset to zero. </p>
@@ -74,10 +85,15 @@ challenge, and its total is reset to zero. </p>
 
 <h2> Leaderboard simulation using historical CTC data </h2>
 
+<p>
+<span class="toggle">&#9654; Show summary </span> </p>
+</p>
 
-<h3> Summary </h3>
+<div class="infoBox">
 
 <div id="summary"></div>
+
+</div><!--end infoBox-->
 
 
 <h3> Monthly leaderboards </h3>
