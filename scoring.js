@@ -6,7 +6,8 @@ var Scoring = {
   optionPadding: { height: 2, width: 6 },
   transpose: { horizontal: 'vertical', vertical: 'horizontal' },
   chart: { barWidth: 5, barHeight: 1 },
-  initialOrientation: 'vertical'
+  initialOrientation: 'vertical',
+  winner: { rolloverPoints: true }
 };
 
 Scoring.makeRankings = function () {
@@ -19,13 +20,17 @@ Scoring.makeRankings = function () {
   for (var ii = 0; ii < monthIds.length; ++ii) {
     var id = monthIds[ii],
         tally = monthInfo[monthIds[ii]].tally,
-        nonzero = {},
+        floated = {},
         board = [];
-    // The previous month's winner starts anew from zero points.
+    // Adjust the point total of the previous month's winner.
     if (previousBoard !== undefined) {
       var info = teamInfo[previousBoard[0].team];
       info.lastChallenge = monthIds[ii-1];
-      info.points = 0;
+      if (g.winner.rolloverPoints) {
+        info.points = Math.max(0, Math.floor(previousBoard[0].delta / 2));
+      } else {
+        info.points = 0;
+      }
     }
     // Consider teams that have floated a boat.
     for (var ti = 0; ti < tally.length; ++ti) {
@@ -40,13 +45,13 @@ Scoring.makeRankings = function () {
       info.points += delta;
       board.push({ team: team, points: info.points,
           boats: boats, delta: delta });
-      nonzero[team] = true;
+      floated[team] = true;
     }
     // Now consider teams that haven't.
     for (var ti = 0; ti < teams.length; ++ti) {
       var team = teams[ti],
           info = teamInfo[team];
-      if (info.points === 0 || nonzero[team]) {
+      if (floated[team] || info.points === 0) {
         continue;
       }
       var delta = -Math.ceil(0.2 * info.points);
@@ -215,7 +220,7 @@ Scoring.makeSummary = function (orientation) {
   tr.appendChild(g.makeElement('td', 'mean boats<br />per month', 'header'));
   tr.appendChild(g.makeElement('td', 'mean months<br />until first place',
       'header'));
-  tr.appendChild(g.makeElement('td', 'history of boats per month and wins',
+  tr.appendChild(g.makeElement('td', 'history of boats per month',
       'header chart'));
   tbody.appendChild(tr);
   table.className = 'summary';

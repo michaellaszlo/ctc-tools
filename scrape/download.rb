@@ -2,7 +2,7 @@
 
 require 'net/http'
 
-(57..119).each do |id|
+(119..120).each do |id|
   puts 'downloading challenge %d' % id
   text = Net::HTTP.get('c2ctc.com', '/index.php?c_id=%d' % id)
   file_name = 'challenge.%d.html' % id
