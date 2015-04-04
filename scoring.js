@@ -220,7 +220,7 @@ Scoring.makeSummary = function (orientation) {
   tr.appendChild(g.makeElement('td', 'mean boats<br />per month', 'header'));
   tr.appendChild(g.makeElement('td', 'mean months<br />until first place',
       'header'));
-  tr.appendChild(g.makeElement('td', 'historical record: boats per month',
+  tr.appendChild(g.makeElement('td', 'historical record: boats floated each month',
       'header chart'));
   tbody.appendChild(tr);
   table.className = 'summary';

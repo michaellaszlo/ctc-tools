@@ -11,18 +11,17 @@
 + display summary statistics: mean boats, mean months to win, charts
 + add a winner's rollover to the scoring formula: month's score divided by 2
 + make info boxes
++ add rollover specification
 
-necessary
-- fill out the info box explaining the scoring formula
-- check layout in all major browser/OS combinations
-
-probable
+- write a purely technical explanation of the scoring formula
 - summary charts: show tick marks labeled with the year
 - leaderboard: show rank numbers
+- check layout in all major browser/OS combinations
+- write forum post advocating for my proposal
+
+maybe
 - summary charts: highlight month and show data on hover
 - leaderboard: illuminate column and/or row on hover
-
-potential
 - make the decay and rollover optional (toggle with checkboxes)
 - experiment with other ranking formulae
 - use getComputedStyle to synchronize JS with CSS
