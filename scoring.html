@@ -44,21 +44,78 @@ by a team. Then: </p>
 <ul>
   <li>
     &bull; If <span class="math">x</span> is greater than zero, the
-    team gains <span class="math">floor(100&middot;log(x+1))</span> points.
+    team gains <span
+    class="math">floor(100&middot;log<sub>2</sub>(x+1))</span>
+    points.
     <span class="toggle">&#9654; What does the formula mean?</span>
   </li>
 
 <div class="infoBox">
 
-<p> The notation <span class="math">log</span> stands for the
-logarithmic function. When we take the logarithm of a number, we
-are doing the inverse of exponentiation. When we exponentiate a number, we multiply it by itself a certain number of times. This is also called
-is when we raise a number to a power. For example, if we raise 2
-to the power of 3, we are multiplying 2 by itself three times: </p>
+<p> The notation <span class="math">log<sub>2</sub></span> means
+taking the logarithm to base 2. This is the inverse of raising 2
+to a power. </p>
 
-<p> 2<sup>3</sup> = 2 &times; 2 &times; 2 = 8 </p>
+<p> For example, to raise 2 to the power of 3, we multiply 2 by
+itself three times: </p>
 
-<p> We say 
+<p class="math"> 2<sup>3</sup> = 2 &times; 2 &times; 2 = 8 </p>
+
+<p> If we are given the number 8 and we take its logarithm to base
+2, we are asking the following question: How many times do we have
+to multiply 2 by itself to get 8? The answer is 3. This is written:
+</p>
+
+<p class="math"> log<sub>2</sub>(8) = 3 </p>
+
+<p> Similarly, the logarithm of 16 to base 2 is 4. </p>
+
+<p class="math"> 2<sup>4</sup> = 2 &times; 2 &times; 2 &times; 2 = 16 </p>
+
+<p class="math"> log<sub>2</sub>(16) = 4 </p>
+
+<p> The reason for using <span class="math">log<sub>2</sub></span>
+in the scoring formula is to mitigate the exponential differences
+in team sizes. </p>
+
+<p> Below is a chart of the exponential function <span
+class="math">2<sup>x</sup></span>, meaning that 2 is raised to the
+power of <span class="math">x</span>: </p>
+
+<img src="something.png" />
+
+<p> This is similar to the distribution of team sizes in the CTC.
+Large teams don't have a few more members than small teams, they
+have many more members. If we award a fixed number of points for
+each boat floated in a month, large teams will have many more points
+than small teams. </p>
+
+<p> This is where the logarithmic function comes in. Below is a
+chart of <span class="math">log<sub>2</sub>(x)</span>. </p>
+
+<img src="something.png" />
+
+<p> Whereas the exponential function increases at an ever faster
+rate, the logarithmic function increases ever more slowly. Thus,
+when we take the logarithm of an exponential function, we cancel
+out its rapid growth. </p>
+
+<p class="math"> log<sub>2</sub>(2<sup>x</sup>) = x </p>
+
+<p> The resulting chart rises at a constant rate. </p>
+
+<img src="something.png" />
+
+<p> The general idea is to make a scoring function that rewards
+teams for floating more boats, but doesn't let the biggest teams
+earn vastly more points than the smallest teams. A team is still
+rewarded for each additional boat that it floats in a month, but
+the reward gets smaller as the total number of boats gets bigger.
+</p>
+
+<p> The rest of the scoring formula consists of modifications that
+make the results easier to use. </p>
+
 
 </div><!--end infoBox-->
 
@@ -74,7 +131,7 @@ to the power of 3, we are multiplying 2 by itself three times: </p>
 <div class="infoBox">
 
 <p> Ties for first place should occur rarely. With this formula,
-there are no ties in the past nine years of CTC data. </p>
+there are no ties for the past nine years of CTC data. </p>
 
 <p> If there is a tie for first place, it is broken according to
 the following rules: </p>

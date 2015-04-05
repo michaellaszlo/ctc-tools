@@ -10,16 +10,19 @@
 + change the button to a vertical stack
 + display summary statistics: mean boats, mean months to win, charts
 + add a winner's rollover to the scoring formula: month's score divided by 2
-+ make info boxes
++ implement info-box functionality
 + add rollover specification
 
-- write a purely technical explanation of the scoring formula
+- make an easy point look-up for the info box under the scoring formula
 - summary charts: show tick marks labeled with the year
 - leaderboard: show rank numbers
+- make sure that first-time visitors will understand what they're looking at
+  - brief explanations here and there
+  - link back to the forum (and to the CTC? and to the monthly results?)
 - check layout in all major browser/OS combinations
-- write forum post advocating for my proposal
 
 maybe
+- add the current month and update results hourly
 - summary charts: highlight month and show data on hover
 - leaderboard: illuminate column and/or row on hover
 - make the decay and rollover optional (toggle with checkboxes)

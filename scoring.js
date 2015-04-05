@@ -41,7 +41,7 @@ Scoring.makeRankings = function () {
         teams.push(team);
         info.points = 0;
       }
-      var delta = Math.floor(100*Math.log(boats+1));
+      var delta = Math.floor(100*Math.log(boats+1)/Math.log(2));
       info.points += delta;
       board.push({ team: team, points: info.points,
           boats: boats, delta: delta });
