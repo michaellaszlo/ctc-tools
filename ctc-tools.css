@@ -157,6 +157,10 @@ td a:hover {
   color: #911d1d;
 }
 
+#functionChart canvas {
+  background: #fff;
+}
+
 table.summary {
   border-collapse: collapse;
   font-size: 15px;

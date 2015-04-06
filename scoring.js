@@ -5,7 +5,8 @@ var Scoring = {
   cellWidth: 160, columnGap: 20, winnerGapHorizontal: 16,
   optionPadding: { height: 2, width: 6 },
   transpose: { horizontal: 'vertical', vertical: 'horizontal' },
-  chart: { barWidth: 5, barHeight: 1 },
+  chart: { function: { maxValue: 40, bar: { width: 20, height: 1 } },
+           summary: { bar: { width: 5, height: 1 } } },
   initialOrientation: 'vertical',
   winner: { rolloverPoints: true }
 };
@@ -213,8 +214,8 @@ Scoring.makeSummary = function (orientation) {
   var container = document.getElementById('summary'),
       table = document.createElement('table'),
       tbody = document.createElement('tbody'),
-      barWidth = g.chart.barWidth,
-      barHeight = g.chart.barHeight,
+      barWidth = g.chart.summary.bar.width,
+      barHeight = g.chart.summary.bar.height,
       tr = document.createElement('tr');
   tr.appendChild(g.makeElement('td'));
   tr.appendChild(g.makeElement('td', 'mean boats<br />per month', 'header'));
@@ -348,6 +349,7 @@ Scoring.makeTable = function (orientation) {
       monthIds.length * (g.cellWidth + g.columnGap) + 'px';
   g.table.horizontal.style.width =
       (1 + maxLength) * g.cellWidth + g.winnerGapHorizontal + 'px';
+  g.container = document.getElementById('leaderboards');
   var names = ['vertical', 'horizontal'];
   for (var i = 0; i < names.length; ++i) {
     var name = names[i],
@@ -458,6 +460,34 @@ Scoring.makeToggleHandler = function (toggle, infoBox) {
   }
 };
 
+// Draw chart to illustrate the scoring function.
+Scoring.makeFunctionChart = function () {
+  var g = Scoring,
+      container = document.getElementById('functionChart'),
+      xMax = g.chart.function.maxValue,
+      values = new Array(xMax + 1);
+  for (var x = 0; x <= xMax; ++x) {
+    values[x] = Math.floor(100 * Math.log(x+1) / Math.log(2));
+  }
+  var yMax = values[xMax],
+      barWidth = g.chart.function.bar.width,
+      barHeight = g.chart.function.bar.height,
+      width = (xMax+1) * barWidth,
+      height = (yMax+1) * barHeight,
+      canvas = document.createElement('canvas'),
+      context = canvas.getContext('2d');
+  canvas.width = width;
+  canvas.height = height;
+  context.fillStyle = '#888';
+  for (var x = 0; x <= xMax; ++x) {
+    var y = values[x],
+        left = x * barWidth,
+        down = height - y;
+    context.fillRect(left, down, barWidth, y*barHeight);
+  }
+  container.appendChild(canvas);
+};
+
 Scoring.load = function () {
   var g = Scoring;
 
@@ -467,16 +497,12 @@ Scoring.load = function () {
   for (var i = 0; i < toggles.length; ++i) {
     toggles[i].onclick = g.makeToggleHandler(toggles[i], infoBoxes[i]);
   }
-
-  // Draw chart to illustrate the scoring function.
   toggles[0].onclick();
-  var container = infoBoxes[0],
-      values = 
 
+  g.makeFunctionChart();
   g.makeRankings();
   g.makeSummary();
-  g.container = document.getElementById('tallies');
-  g.makeTable(g.initialOrientation);
+  //g.makeTable(g.initialOrientation);
 
   // Make option elements for switching table orientation.
   var layout = document.getElementById('layout'),
