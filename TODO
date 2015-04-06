@@ -13,7 +13,7 @@
 + implement info-box functionality
 + add rollover specification
 
-- make an easy point look-up for the info box under the scoring formula
+- info box: illustrate the scoring formula with a chart
 - summary charts: show tick marks labeled with the year
 - leaderboard: show rank numbers
 - make sure that first-time visitors will understand what they're looking at
@@ -23,6 +23,7 @@
 
 maybe
 - add the current month and update results hourly
+- summary charts: increase segment height and make chart height adaptive
 - summary charts: highlight month and show data on hover
 - leaderboard: illuminate column and/or row on hover
 - make the decay and rollover optional (toggle with checkboxes)

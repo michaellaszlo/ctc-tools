@@ -303,12 +303,13 @@ Scoring.makeTable = function (orientation) {
   // Fill the columns of the vertical table and the rows of the horizontal one.
   for (var c = 0; c < monthIds.length; ++c) {
     tbody.horizontal.appendChild(document.createElement('tr'));
-    var record = monthInfo[monthIds[monthIds.length-1-c]],
+    var monthId = monthIds[monthIds.length - 1 - c],
+        record = monthInfo[monthId],
         board = record.board,
         td = document.createElement('td'),
         a = document.createElement('a');
     td.className = 'date';
-    a.href = 'http://c2ctc.com/index.php?c_id='+record.id;
+    a.href = 'http://c2ctc.com/index.php?c_id=' + monthId;
     a.target = '_blank';
     a.innerHTML = record.dateString;
     td.appendChild(a);
@@ -466,6 +467,11 @@ Scoring.load = function () {
   for (var i = 0; i < toggles.length; ++i) {
     toggles[i].onclick = g.makeToggleHandler(toggles[i], infoBoxes[i]);
   }
+
+  // Draw chart to illustrate the scoring function.
+  toggles[0].onclick();
+  var container = infoBoxes[0],
+      values = 
 
   g.makeRankings();
   g.makeSummary();
