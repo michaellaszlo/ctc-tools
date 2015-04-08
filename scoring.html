@@ -10,7 +10,6 @@
     WebFontConfig = {
       google: { families: [ 'Open+Sans:400,600,700:latin',
           'Inconsolata:400,700:latin'] },
-      //active: function () { console.log('active') } //Scoring.fontsActive
       active: Scoring.fontsActive
     };
     (function() {
@@ -47,10 +46,20 @@ by a team. Then: </p>
     team gains <span
     class="math">floor(100&middot;log<sub>2</sub>(x+1))</span>
     points.
-    <span class="toggle">&#9654; What does the formula mean?</span>
+    <span class="toggle">&#9654; What does this formula mean?</span>
   </li>
 
 <div class="infoBox" id="functionChart">
+
+<p> The scoring formula awards many points for the first few boats
+floated by a team in one month. As a team floats more boats, the
+number of points for each additional boat becomes progressively
+smaller. This means that teams still have an incentive to float
+more points, but the largest teams will not earn vastly more points
+than the smaller teams. </p>
+
+<p> The following graph shows exactly how many points are awarded
+for floating a given number of boats. </p>
 
 </div><!--end infoBox-->
 

@@ -158,7 +158,7 @@ td a:hover {
 }
 
 #functionChart canvas {
-  background: #fff;
+  background: transparent;
 }
 
 table.summary {

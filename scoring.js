@@ -5,8 +5,8 @@ var Scoring = {
   cellWidth: 160, columnGap: 20, winnerGapHorizontal: 16,
   optionPadding: { height: 2, width: 6 },
   transpose: { horizontal: 'vertical', vertical: 'horizontal' },
-  chart: { function: { maxValue: 40, bar: { width: 20, height: 1 } },
-           summary: { bar: { width: 5, height: 1 } } },
+  chart: { function: { maxBoats: 40, bar: { span: 20, delta: 1 } },
+           summary: { bar: { span: 5, delta: 1 } } },
   initialOrientation: 'vertical',
   winner: { rolloverPoints: true }
 };
@@ -214,8 +214,8 @@ Scoring.makeSummary = function (orientation) {
   var container = document.getElementById('summary'),
       table = document.createElement('table'),
       tbody = document.createElement('tbody'),
-      barWidth = g.chart.summary.bar.width,
-      barHeight = g.chart.summary.bar.height,
+      barWidth = g.chart.summary.bar.span,
+      barHeight = g.chart.summary.bar.delta,
       tr = document.createElement('tr');
   tr.appendChild(g.makeElement('td'));
   tr.appendChild(g.makeElement('td', 'mean boats<br />per month', 'header'));
@@ -365,10 +365,10 @@ Scoring.makeTable = function (orientation) {
 
 Scoring.fontsActive = function () {
   var g = Scoring;
-  g.adjustOptionsEverything();
+  g.adjustOptionsAll();
 };
 
-Scoring.adjustOptionsEverything = function () {
+Scoring.adjustOptionsAll = function () {
   var g = Scoring,
       dummy = g.option.dummy,
       width = dummy.offsetWidth - 2*g.optionPadding.width,
@@ -464,26 +464,24 @@ Scoring.makeToggleHandler = function (toggle, infoBox) {
 Scoring.makeFunctionChart = function () {
   var g = Scoring,
       container = document.getElementById('functionChart'),
-      xMax = g.chart.function.maxValue,
-      values = new Array(xMax + 1);
-  for (var x = 0; x <= xMax; ++x) {
-    values[x] = Math.floor(100 * Math.log(x+1) / Math.log(2));
+      maxBoats = g.chart.function.maxBoats,
+      scores = new Array(maxBoats + 1);
+  for (var boats = 0; boats <= maxBoats; ++boats) {
+    scores[boats] = Math.floor(100 * Math.log(boats+1) / Math.log(2));
   }
-  var yMax = values[xMax],
-      barWidth = g.chart.function.bar.width,
-      barHeight = g.chart.function.bar.height,
-      width = (xMax+1) * barWidth,
-      height = (yMax+1) * barHeight,
+  var maxScore = scores[maxBoats],
+      barSpan = g.chart.function.bar.span,
+      barDelta = g.chart.function.bar.delta,
+      width = maxScore * barDelta,
+      height = maxBoats * barSpan,
       canvas = document.createElement('canvas'),
       context = canvas.getContext('2d');
   canvas.width = width;
   canvas.height = height;
   context.fillStyle = '#888';
-  for (var x = 0; x <= xMax; ++x) {
-    var y = values[x],
-        left = x * barWidth,
-        down = height - y;
-    context.fillRect(left, down, barWidth, y*barHeight);
+  for (var boats = 0; boats <= maxBoats; ++boats) {
+    var score = scores[boats];
+    context.fillRect(0, boats * barSpan, score * barDelta, barSpan);
   }
   container.appendChild(canvas);
 };
@@ -541,7 +539,7 @@ Scoring.load = function () {
     }
     layout.appendChild(option);
   };
-  g.adjustOptionsEverything();
+  g.adjustOptionsAll();
 };
 
 window.onload = Scoring.load;
