@@ -159,6 +159,14 @@ td a:hover {
 
 #functionChart canvas {
   background: transparent;
+  position: relative;
+  left: 50px;
+}
+#functionChart {
+  position: relative;
+}
+#functionChart span.label {
+  position: absolute;
 }
 
 table.summary {

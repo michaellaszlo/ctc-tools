@@ -5,7 +5,7 @@ var Scoring = {
   cellWidth: 160, columnGap: 20, winnerGapHorizontal: 16,
   optionPadding: { height: 2, width: 6 },
   transpose: { horizontal: 'vertical', vertical: 'horizontal' },
-  chart: { function: { maxBoats: 40, bar: { span: 20, delta: 1 } },
+  chart: { function: { maxBoats: 40, bar: { span: 20, delta: 1.5 } },
            summary: { bar: { span: 5, delta: 1 } } },
   initialOrientation: 'vertical',
   winner: { rolloverPoints: true }
@@ -466,7 +466,7 @@ Scoring.makeFunctionChart = function () {
       container = document.getElementById('functionChart'),
       maxBoats = g.chart.function.maxBoats,
       scores = new Array(maxBoats + 1);
-  for (var boats = 0; boats <= maxBoats; ++boats) {
+  for (var boats = 1; boats <= maxBoats; ++boats) {
     scores[boats] = Math.floor(100 * Math.log(boats+1) / Math.log(2));
   }
   var maxScore = scores[maxBoats],
@@ -478,12 +478,21 @@ Scoring.makeFunctionChart = function () {
       context = canvas.getContext('2d');
   canvas.width = width;
   canvas.height = height;
-  context.fillStyle = '#888';
-  for (var boats = 0; boats <= maxBoats; ++boats) {
-    var score = scores[boats];
-    context.fillRect(0, boats * barSpan, score * barDelta, barSpan);
-  }
   container.appendChild(canvas);
+  for (var boats = 1; boats <= maxBoats; ++boats) {
+    var score = scores[boats],
+        top = boats * barSpan;
+    context.fillStyle = '#ddd';
+    context.fillRect(0, top+1, score * barDelta, barSpan);
+    context.fillStyle = '#aaa';
+    context.fillRect(0, top + barSpan, score * barDelta, 1);
+    var label = g.makeElement('span', boats, 'label');
+    container.appendChild(label);
+    var width = label.offsetWidth,
+        height = label.offsetHeight;
+    label.style.top = canvas.offsetTop + top + 'px';
+    label.style.left = canvas.offsetLeft - width - Math.floor(barSpan/2) + 'px';
+  }
 };
 
 Scoring.load = function () {
