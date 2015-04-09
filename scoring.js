@@ -481,7 +481,7 @@ Scoring.makeFunctionChart = function () {
   container.appendChild(canvas);
   for (var boats = 1; boats <= maxBoats; ++boats) {
     var score = scores[boats],
-        top = boats * barSpan;
+        top = (boats - 1) * barSpan;
     context.fillStyle = '#ddd';
     context.fillRect(0, top+1, score * barDelta, barSpan);
     context.fillStyle = '#aaa';
