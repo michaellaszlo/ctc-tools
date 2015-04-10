@@ -492,6 +492,11 @@ Scoring.makeFunctionChart = function () {
         height = label.offsetHeight;
     label.style.top = canvas.offsetTop + top + 'px';
     label.style.left = canvas.offsetLeft - width - Math.floor(barSpan/2) + 'px';
+    label = g.makeElement('span', score, 'label');
+    container.appendChild(label);
+    label.style.top = canvas.offsetTop + top + 'px';
+    label.style.left = canvas.offsetLeft + score*barDelta +
+        Math.floor(barSpan/2) + 'px';
   }
 };
 
