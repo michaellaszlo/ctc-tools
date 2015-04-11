@@ -479,24 +479,34 @@ Scoring.makeFunctionChart = function () {
   canvas.width = width;
   canvas.height = height;
   container.appendChild(canvas);
+  var label = g.makeElement('span', 'boats', 'label'),
+      labelMargin = Math.floor(barSpan/2.25);
+  container.appendChild(label);
+  var width = label.offsetWidth,
+      height = label.offsetHeight;
+  label.style.top = canvas.offsetTop - height + 'px';
+  label.style.left = canvas.offsetLeft - width - labelMargin + 'px';
+  label = g.makeElement('span', 'points', 'label');
+  label.style.top = canvas.offsetTop - height + 'px';
+  label.style.left = canvas.offsetLeft + labelMargin + 'px';
+  container.appendChild(label);
   for (var boats = 1; boats <= maxBoats; ++boats) {
     var score = scores[boats],
         top = (boats - 1) * barSpan;
-    context.fillStyle = '#ddd';
+    context.fillStyle = '#cad2b0';
     context.fillRect(0, top+1, score * barDelta, barSpan);
-    context.fillStyle = '#aaa';
+    context.fillStyle = '#b1ba96';
     context.fillRect(0, top + barSpan, score * barDelta, 1);
     var label = g.makeElement('span', boats, 'label');
     container.appendChild(label);
     var width = label.offsetWidth,
         height = label.offsetHeight;
     label.style.top = canvas.offsetTop + top + 'px';
-    label.style.left = canvas.offsetLeft - width - Math.floor(barSpan/2) + 'px';
+    label.style.left = canvas.offsetLeft - width - labelMargin + 'px';
     label = g.makeElement('span', score, 'label');
     container.appendChild(label);
     label.style.top = canvas.offsetTop + top + 'px';
-    label.style.left = canvas.offsetLeft + score*barDelta +
-        Math.floor(barSpan/2) + 'px';
+    label.style.left = canvas.offsetLeft + score*barDelta + labelMargin + 'px';
   }
 };
 

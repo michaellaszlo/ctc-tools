@@ -159,6 +159,7 @@ td a:hover {
 
 #functionChart canvas {
   background: transparent;
+  margin: 25px 0 15px;
   position: relative;
   left: 50px;
 }
@@ -167,6 +168,7 @@ td a:hover {
 }
 #functionChart span.label {
   position: absolute;
+  font-family: Inconsolata;
 }
 
 table.summary {
