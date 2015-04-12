@@ -493,7 +493,7 @@ Scoring.makeFunctionChart = function () {
   for (var boats = 1; boats <= maxBoats; ++boats) {
     var score = scores[boats],
         top = (boats - 1) * barSpan;
-    context.fillStyle = '#cad2b0';
+    context.fillStyle = (boats % 2 == 0 ? '#cad2b0' : '#c4d5a6');
     context.fillRect(0, top+1, score * barDelta, barSpan);
     context.fillStyle = '#b1ba96';
     context.fillRect(0, top + barSpan, score * barDelta, 1);

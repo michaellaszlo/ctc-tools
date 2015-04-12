@@ -12,8 +12,8 @@
 + add a winner's rollover to the scoring formula: month's score divided by 2
 + implement info-box functionality
 + add rollover specification
++ info box: illustrate the scoring formula with a chart
 
-- info box: illustrate the scoring formula with a chart
 - summary charts: show tick marks labeled with the year
 - leaderboard: show rank numbers
 - make sure that first-time visitors will understand what they're looking at
