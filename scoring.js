@@ -238,6 +238,23 @@ Scoring.makeSummary = function (orientation) {
       }
       tr.appendChild(td);
     }
+    // Prepare additional month information.
+    var monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'],
+        monthNameToNumber = {};
+    for (var i = 0; i < monthNames.length; ++i) {
+      monthNameToNumber[monthNames[i]] = i;
+    }
+    for (var i = 0; i < monthIds.length; ++i) {
+      var id = monthIds[i],
+          info = monthInfo[id],
+          match = info.dateString.match(/(\d+)\s+(\w+)/);
+      info.year = parseInt(match[1], 10);
+      info.month = { name: match[2] };
+      info.month.number = monthNameToNumber[info.month.name];
+      console.log(id, JSON.stringify(info.month));
+    }
+    // Render summary charts.
     var canvas = document.createElement('canvas'),
         context = canvas.getContext('2d'),
         numMonths = monthIds.length,

@@ -16,9 +16,15 @@
 
 - summary charts: show tick marks labeled with the year
 - leaderboard: show rank numbers
-- make sure that first-time visitors will understand what they're looking at
+- review all content
+  - make sure that first-time visitors will understand what they're looking at
   - brief explanations where necessary
   - link back to the forum (and to the CTC? and to the monthly results?)
+- review all presentation
+  - layout?
+  - styling?
+  - hover effects?
+  - other interactions?
 - check layout in all major browser/OS combinations
 
 maybe
