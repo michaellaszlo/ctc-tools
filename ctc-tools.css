@@ -1,6 +1,7 @@
-body, div, p, ul, li, table, tr, td, h1, h2, h3, h4 {
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 body {
@@ -107,7 +108,7 @@ table.board td {
   padding-top: 1px;
   padding-bottom: 2px;
   height: 35px;
-  width: 150px;
+  width: 160px;
   padding-left: 10px;
   position: relative;
   font-size: 12px;
@@ -131,9 +132,15 @@ table.vertical td {
 table.horizontal td {
   border-bottom: 10px solid #fff;
 }
+.tally {
+  font-size: 13px;
+  padding: 2px 26px 2px 6px;
+  position: relative;
+}
 td .boats {
   position: absolute;
-  right: 10px;
+  right: 6px;
+  top: 2px;
 }
 table.board td .boats {
   left: 10px;
