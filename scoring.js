@@ -247,12 +247,11 @@ Scoring.makeSummary = function (orientation) {
     }
     for (var i = 0; i < monthIds.length; ++i) {
       var id = monthIds[i],
-          info = monthInfo[id],
-          match = info.dateString.match(/(\d+)\s+(\w+)/);
-      info.year = parseInt(match[1], 10);
-      info.month = { name: match[2] };
-      info.month.number = monthNameToNumber[info.month.name];
-      console.log(id, JSON.stringify(info.month));
+          thisMonth = monthInfo[id],
+          match = thisMonth.dateString.match(/(\d+)\s+(\w+)/);
+      thisMonth.year = parseInt(match[1], 10);
+      thisMonth.month = { name: match[2] };
+      thisMonth.month.number = monthNameToNumber[thisMonth.month.name];
     }
     // Render summary charts.
     var canvas = document.createElement('canvas'),
@@ -536,7 +535,6 @@ Scoring.load = function () {
   for (var i = 0; i < toggles.length; ++i) {
     toggles[i].onclick = g.makeToggleHandler(toggles[i], infoBoxes[i]);
   }
-  toggles[0].onclick();
 
   g.makeFunctionChart();
   g.makeRankings();
