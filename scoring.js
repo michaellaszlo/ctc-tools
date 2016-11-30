@@ -472,6 +472,9 @@ Scoring.makeToggleHandler = function (toggle, infoBox) {
       g.classAdd(toggle, 'hide');
       toggle.originalHTML = toggle.innerHTML;
       toggle.innerHTML = '&#9660; Hide';
+      if (infoBox.resize) {
+        infoBox.resize();
+      }
     }
   }
 };
@@ -481,13 +484,19 @@ Scoring.makeFunctionChart = function () {
   var g = Scoring,
       container = document.getElementById('functionChart'),
       maxBoats = g.chart.function.maxBoats,
-      scores = new Array(maxBoats + 1);
+      scores = new Array(maxBoats + 1),
+      labels = {
+        count: {},
+        score: {}
+      },
+      label, countLabel, scoreLabel;
   for (var boats = 1; boats <= maxBoats; ++boats) {
     scores[boats] = Math.floor(100 * Math.log(boats+1) / Math.log(2));
   }
   var maxScore = scores[maxBoats],
       barSpan = g.chart.function.bar.span,
       barDelta = g.chart.function.bar.delta,
+      labelMargin = Math.floor(barSpan/2.25),
       width = maxScore * barDelta,
       height = maxBoats * barSpan,
       canvas = document.createElement('canvas'),
@@ -495,35 +504,44 @@ Scoring.makeFunctionChart = function () {
   canvas.width = width;
   canvas.height = height;
   container.appendChild(canvas);
-  var label = g.makeElement('span', 'boats', 'label'),
-      labelMargin = Math.floor(barSpan/2.25);
-  container.appendChild(label);
-  var width = label.offsetWidth,
-      height = label.offsetHeight;
-  label.style.top = canvas.offsetTop - height + 'px';
-  label.style.left = canvas.offsetLeft - width - labelMargin + 'px';
-  label = g.makeElement('span', 'points', 'label');
-  label.style.top = canvas.offsetTop - height + 'px';
-  label.style.left = canvas.offsetLeft + labelMargin + 'px';
-  container.appendChild(label);
-  for (var boats = 1; boats <= maxBoats; ++boats) {
-    var score = scores[boats],
-        top = (boats - 1) * barSpan;
-    context.fillStyle = (boats % 2 == 0 ? '#cad2b0' : '#c4d5a6');
+  countLabel = g.makeElement('span', 'boats', 'label');
+  container.appendChild(countLabel);
+  scoreLabel = g.makeElement('span', 'points', 'label');
+  container.appendChild(scoreLabel);
+  console.log(canvas.offsetParent, canvas.offsetTop);
+  for (var count = 1; count <= maxBoats; ++count) {
+    var score = scores[count],
+        top = (count - 1) * barSpan;
+    context.fillStyle = (count % 2 == 0 ? '#cad2b0' : '#c4d5a6');
     context.fillRect(0, top+1, score * barDelta, barSpan);
     context.fillStyle = '#b1ba96';
     context.fillRect(0, top + barSpan, score * barDelta, 1);
-    var label = g.makeElement('span', boats, 'label');
+    label = labels.count[count] = g.makeElement('span', count, 'label');
     container.appendChild(label);
-    var width = label.offsetWidth,
-        height = label.offsetHeight;
-    label.style.top = canvas.offsetTop + top + 'px';
-    label.style.left = canvas.offsetLeft - width - labelMargin + 'px';
-    label = g.makeElement('span', score, 'label');
+    label = labels.score[count] = g.makeElement('span', score, 'label');
     container.appendChild(label);
-    label.style.top = canvas.offsetTop + top + 'px';
-    label.style.left = canvas.offsetLeft + score*barDelta + labelMargin + 'px';
   }
+  container.resize = function () {
+    for (var count = 1; count <= maxBoats; ++count) {
+      width = countLabel.offsetWidth;
+      height = countLabel.offsetHeight;
+      countLabel.style.top = canvas.offsetTop - height + 'px';
+      countLabel.style.left = canvas.offsetLeft - width - labelMargin + 'px';
+      scoreLabel.style.top = canvas.offsetTop - height + 'px';
+      scoreLabel.style.left = canvas.offsetLeft + labelMargin + 'px';
+      var top = (count - 1) * barSpan,
+          label = labels.count[count],
+          width = label.offsetWidth,
+          height = label.offsetHeight;
+      label.style.top = canvas.offsetTop + top + 'px';
+      label.style.left = canvas.offsetLeft - width - labelMargin + 'px';
+      label = labels.score[count];
+      label.style.top = canvas.offsetTop + top + 'px';
+      label.style.left = canvas.offsetLeft + scores[count]*barDelta +
+          labelMargin + 'px';
+    }
+  };
+  container.resize();
 };
 
 Scoring.load = function () {
