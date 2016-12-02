@@ -381,7 +381,7 @@ Scoring.makeTable = function (orientation) {
 
 Scoring.fontsActive = function () {
   var g = Scoring;
-  g.adjustOptionsAll();
+  //g.adjustOptionsAll();
 };
 
 Scoring.adjustOptionsAll = function () {
@@ -508,7 +508,6 @@ Scoring.makeFunctionChart = function () {
   container.appendChild(countLabel);
   scoreLabel = g.makeElement('span', 'points', 'label');
   container.appendChild(scoreLabel);
-  console.log(canvas.offsetParent, canvas.offsetTop);
   for (var count = 1; count <= maxBoats; ++count) {
     var score = scores[count],
         top = (count - 1) * barSpan;
@@ -557,46 +556,29 @@ Scoring.load = function () {
   g.makeFunctionChart();
   g.makeRankings();
   g.makeSummary();
-  //g.makeTable(g.initialOrientation);
+  var initialOrientation = 'vertical';
+  g.makeTable(initialOrientation);
 
-  // Make option elements for switching table orientation.
-  var layout = document.getElementById('layout'),
-      dummy = layout.getElementsByTagName('div')[0],
-      optionWidth = dummy.offsetWidth,
-      optionHeight = dummy.offsetHeight;
-  g.option = { dummy: dummy };
-  var names = ['vertical', 'horizontal'];
-  for (var i = 0; i < names.length; ++i) {
-    var name = names[i],
-        option = document.createElement('div');
-    g.option[name] = option;
-    option.id = option.innerHTML = name;
-    option.className = 'option';
-    if (name == g.initialOrientation) {
-      option.className += ' live';
-      g.option.live = option;
-    } else {
-      option.className += ' dead';
-      g.option.dead = option;
-    }
-    option.onmouseover = function () {
-      g.option.dead.className = 'option dead glow';
-    }
-    option.onmouseout = function () {
-      g.option.dead.className = 'option dead';
-    }
-    option.onclick = function () {
-      var t = g.option.live;
-      g.option.live = g.option.dead;
-      g.option.dead = t;
-      g.option.live.className = 'option live';
-      g.option.dead.className = 'option dead';
-      g.adjustOptionsVertical();
-      g.makeTable(g.option.live.id);
-    }
-    layout.appendChild(option);
+  // Make button for switching table orientation.
+  var button = document.getElementById('button');
+  g.label = {  // These are labels inside the button.
+    horizontal: document.getElementById('horizontal'),
+    vertical: document.getElementById('vertical'),
   };
-  g.adjustOptionsAll();
+  // Set the initial state of the buttons.
+  g.label.live = g.label[initialOrientation];
+  g.label.dead = g.label[g.transpose[initialOrientation]];
+  g.label.live.className = 'live';
+  g.label.dead.className = 'dead';
+  // Define an orientation switcher.
+  button.onclick = function () {
+    var t = g.label.live;
+    g.label.live = g.label.dead;
+    g.label.dead = t;
+    g.label.live.className = 'live';
+    g.label.dead.className = 'dead';
+    g.makeTable(g.label.live.id);
+  };
 };
 
 window.onload = Scoring.load;
