@@ -149,7 +149,7 @@ Scoring.makeElement = function (tag, innerHTML, className) {
   return element;
 };
 
-Scoring.makeSummary = function (orientation) {
+Scoring.makeSummaries = function (orientation) {
   var g = Scoring,
       monthInfo = g.monthInfo,
       monthIds = g.monthIds,
@@ -225,15 +225,15 @@ Scoring.makeSummary = function (orientation) {
       'header chart'));
   tbody.appendChild(tr);
   table.className = 'summary';
-  for (var i = 0; i < summary.length; ++i) {
-    var info = summary[i],
+  for (var teamIx = 0; teamIx < summary.length; ++teamIx) {
+    var info = summary[teamIx],
         fields = [info.team, info.meanBoats,
                   info.meanWinInterval === undefined ?
                   '&minus;' : info.meanWinInterval],
         tr = document.createElement('tr');
-    for (var j = 0; j < fields.length; ++j) {
-      var td = g.makeElement('td', fields[j]);
-      if (j != 0) {
+    for (var i = 0; i < fields.length; ++i) {
+      var td = g.makeElement('td', fields[i]);
+      if (i != 0) {
         td.className = 'number';
       }
       tr.appendChild(td);
@@ -555,7 +555,7 @@ Scoring.load = function () {
 
   g.makeFunctionChart();
   g.makeRankings();
-  g.makeSummary();
+  g.makeSummaries();
   var initialOrientation = 'vertical';
   g.makeTable(initialOrientation);
 
