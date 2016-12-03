@@ -105,19 +105,19 @@ table.board {
 }
 
 table.board td {
+  padding-left: 10px;
   padding-top: 1px;
   padding-bottom: 2px;
-  height: 35px;
   width: 160px;
-  padding-left: 10px;
+  height: 45px;
   position: relative;
   font-size: 12px;
-  height: 45px;
 }
 td.date {
   font-size: 13px;
 }
 table.vertical td.winner {
+  height: 53px;
   border-bottom: 8px solid #fff;
 }
 table.horizontal td.winner {
@@ -139,20 +139,25 @@ table.horizontal td {
 }
 td .boats {
   position: absolute;
+  color: #000;
+}
+#tallies td .boats {
   right: 6px;
   top: 2px;
 }
-table.board td .boats {
-  left: 10px;
-  bottom: 6px;
+#leaderboards td .boats {
+  left: 6px;
+  bottom: 2px;
 }
-td .score {
+#leaderboards td .team {
   position: absolute;
-  right: 10px;
-  bottom: 6px;
+  left: 6px;
+  top: 2px;
 }
-td span.boats {
-  color: #000;
+#leaderboards td .score {
+  position: absolute;
+  right: 6px;
+  bottom: 2px;
 }
 
 #button {
